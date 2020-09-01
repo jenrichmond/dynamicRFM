@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jen Richmond" />
+
+<meta name="date" content="2020-10-07" />
+
+<title>7b_brow_analysis</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">dynamicRFM</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/jenrichmond/dynamicRFM">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">7b_brow_analysis</h1>
+<h4 class="author">Jen Richmond</h4>
+<h4 class="date">10/07/2020</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-09-01
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>dynamicRFM/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20200901code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20200901)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20200901code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20200901)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjenrichmonddynamicRFMtreed5b2b96dcfbf52b0b2583c753d8fb7a59b29d248targetblankd5b2b96a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jenrichmond/dynamicRFM/tree/d5b2b96dcfbf52b0b2583c753d8fb7a59b29d248" target="_blank">d5b2b96</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjenrichmonddynamicRFMtreed5b2b96dcfbf52b0b2583c753d8fb7a59b29d248targetblankd5b2b96a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/jenrichmond/dynamicRFM/tree/d5b2b96dcfbf52b0b2583c753d8fb7a59b29d248" target="_blank">d5b2b96</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rproj.user/
+    Ignored:    data/.DS_Store
+
+Untracked files:
+    Untracked:  README.Rmd
+    Untracked:  README.html
+    Untracked:  analysis/clean_write_function.R
+    Untracked:  data/Amy_raw/
+    Untracked:  data/clean/
+    Untracked:  data/combined/
+    Untracked:  data/dirty/
+    Untracked:  resources/
+    Untracked:  scripts/
+    Untracked:  site_libs/
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/7b_BROWanalysis_happy_angry.Rmd</code>) and HTML (<code>docs/7b_BROWanalysis_happy_angry.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jenrichmond/dynamicRFM/blob/d5b2b96dcfbf52b0b2583c753d8fb7a59b29d248/analysis/7b_BROWanalysis_happy_angry.Rmd" target="_blank">d5b2b96</a>
+</td>
+<td>
+Your Name
+</td>
+<td>
+2020-09-01
+</td>
+<td>
+publish analysis files
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-packages" class="section level1">
+<h1>load packages</h1>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>Warning: package &#39;tidyverse&#39; was built under R version 3.5.2</code></pre>
+<pre><code>── Attaching packages ────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>✓ ggplot2 3.3.2     ✓ purrr   0.3.3
+✓ tibble  3.0.3     ✓ dplyr   1.0.1
+✓ tidyr   1.1.0     ✓ stringr 1.4.0
+✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
+<pre><code>Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>Warning: package &#39;stringr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>Warning: package &#39;forcats&#39; was built under R version 3.5.2</code></pre>
+<pre><code>── Conflicts ───────────────────────────────────────────── tidyverse_conflicts() ──
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(here)</code></pre>
+<pre><code>here() starts at /Users/jenny/OneDrive - UNSW/ALL_R_stuff/1. PROJECTS/4. DATA_ANALYSIS/HONOURS2020/dynamicRFM</code></pre>
+<pre class="r"><code>library(lme4)</code></pre>
+<pre><code>Warning: package &#39;lme4&#39; was built under R version 3.5.2</code></pre>
+<pre><code>Loading required package: Matrix</code></pre>
+<pre><code>
+Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:tidyr&#39;:
+
+    expand, pack, unpack</code></pre>
+<pre class="r"><code>library(lmerTest)</code></pre>
+<pre><code>Warning: package &#39;lmerTest&#39; was built under R version 3.5.2</code></pre>
+<pre><code>
+Attaching package: &#39;lmerTest&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:lme4&#39;:
+
+    lmer</code></pre>
+<pre><code>The following object is masked from &#39;package:stats&#39;:
+
+    step</code></pre>
+<pre class="r"><code>library(broom.mixed)</code></pre>
+<pre><code>Warning in checkMatrixPackageVersion(): Package version inconsistency detected.
+TMB was built with Matrix version 1.2.15
+Current Matrix version is 1.2.14
+Please re-install &#39;TMB&#39; from source using install.packages(&#39;TMB&#39;, type = &#39;source&#39;) or ask CRAN for a binary version of &#39;TMB&#39; matching CRAN&#39;s &#39;Matrix&#39; package</code></pre>
+<pre class="r"><code># note if you run LMM with just the lme4 package you wont get any pvalues 
+
+# loading lmerTest as well gets you pvalues when you test anova(model)</code></pre>
+</div>
+<div id="read-in-data" class="section level1">
+<h1>read in data</h1>
+<pre class="r"><code>df &lt;- read_csv(here(&quot;data&quot;, &quot;combined&quot;, &quot;5_zdiff_binscreened.csv&quot;)) </code></pre>
+<pre><code>Parsed with column specification:
+cols(
+  pp_no = col_character(),
+  condition = col_character(),
+  emotion = col_double(),
+  trial = col_character(),
+  muscle = col_character(),
+  bin = col_character(),
+  Zdiff = col_double()
+)</code></pre>
+<pre class="r"><code># fix data types, all chars to factors
+df$emotion &lt;- as.factor(df$emotion)
+
+df &lt;- df %&gt;% mutate_if(is.character,as.factor)
+
+glimpse(df)</code></pre>
+<pre><code>Rows: 18,576
+Columns: 7
+$ pp_no     &lt;fct&gt; pp401, pp401, pp401, pp401, pp401, pp401, pp401, pp401…
+$ condition &lt;fct&gt; dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn,…
+$ emotion   &lt;fct&gt; 626, 626, 626, 626, 626, 626, 626, 626, 626, 626, 626,…
+$ trial     &lt;fct&gt; trial1, trial1, trial1, trial1, trial1, trial1, trial1…
+$ muscle    &lt;fct&gt; brow, brow, brow, brow, brow, brow, cheek, cheek, chee…
+$ bin       &lt;fct&gt; bin1, bin2, bin3, bin4, bin5, bin6, bin1, bin2, bin3, …
+$ Zdiff     &lt;dbl&gt; 0.149188943, 0.159161634, -0.245679429, -0.559687470, …</code></pre>
+</div>
+<div id="happy-angry" class="section level1">
+<h1>HAPPY-ANGRY</h1>
+<div id="brow" class="section level2">
+<h2>BROW</h2>
+<p>Make dataframe with just happy/angry for BROW</p>
+<pre class="r"><code>dfHA_brow &lt;- df %&gt;%
+  filter(emotion %in% c(&quot;626&quot;, &quot;727&quot;)) %&gt;%
+  filter(muscle == &quot;brow&quot;) %&gt;%
+  arrange(pp_no, emotion, trial, bin)
+
+glimpse(dfHA_brow)</code></pre>
+<pre><code>Rows: 4,668
+Columns: 7
+$ pp_no     &lt;fct&gt; pp401, pp401, pp401, pp401, pp401, pp401, pp401, pp401…
+$ condition &lt;fct&gt; dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn,…
+$ emotion   &lt;fct&gt; 626, 626, 626, 626, 626, 626, 626, 626, 626, 626, 626,…
+$ trial     &lt;fct&gt; trial1, trial1, trial1, trial1, trial1, trial1, trial2…
+$ muscle    &lt;fct&gt; brow, brow, brow, brow, brow, brow, brow, brow, brow, …
+$ bin       &lt;fct&gt; bin1, bin2, bin3, bin4, bin5, bin6, bin1, bin2, bin3, …
+$ Zdiff     &lt;dbl&gt; 0.149188943, 0.159161634, -0.245679429, -0.559687470, …</code></pre>
+<p>Evidence of mimicry to ANGRY would be evidenced by greater brow acvitity over time (bin) for angry than happy.</p>
+<p>LMM- looking to predict Zdiff from emotion (happy angry), and bin (1-6) and their interaction, allowing intercepts to vary for participant and trial.</p>
+<div id="using-lme4-package-w-lmertest-package" class="section level3">
+<h3>Using lme4 package w lmerTest package</h3>
+<div id="construct-model" class="section level4">
+<h4>construct model</h4>
+<pre class="r"><code>lm_model_brow &lt;- lmer(Zdiff ~ emotion + bin + emotion*bin + (1|pp_no) + (1|trial), data=dfHA_brow, REML = FALSE) </code></pre>
+</div>
+<div id="use-anova-to-estimate-effects" class="section level4">
+<h4>use anova to estimate effects</h4>
+<pre class="r"><code>anova(lm_model_brow)</code></pre>
+<pre><code>Type III Analysis of Variance Table with Satterthwaite&#39;s method
+             Sum Sq Mean Sq NumDF  DenDF  F value    Pr(&gt;F)    
+emotion     123.555 123.555     1 4244.1 138.6287 &lt; 2.2e-16 ***
+bin          14.970   2.994     5 4241.0   3.3593  0.004959 ** 
+emotion:bin  29.645   5.929     5 4241.0   6.6523 3.524e-06 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="use-summary-to-get-coefficients" class="section level4">
+<h4>use summary to get coefficients</h4>
+<pre class="r"><code>summary(lm_model_brow)</code></pre>
+<pre><code>Linear mixed model fit by maximum likelihood . t-tests use
+  Satterthwaite&#39;s method [lmerModLmerTest]
+Formula: Zdiff ~ emotion + bin + emotion * bin + (1 | pp_no) + (1 | trial)
+   Data: dfHA_brow
+
+     AIC      BIC   logLik deviance df.resid 
+ 11827.3  11922.8  -5898.6  11797.3     4283 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.2590 -0.4120 -0.1134  0.1939 11.4263 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ pp_no    (Intercept) 0.047736 0.21849 
+ trial    (Intercept) 0.003859 0.06212 
+ Residual             0.891266 0.94407 
+Number of obs: 4298, groups:  pp_no, 50; trial, 8
+
+Fixed effects:
+                     Estimate Std. Error         df t value Pr(&gt;|t|)    
+(Intercept)         4.107e-02  6.296e-02  1.718e+02   0.652 0.515066    
+emotion727          5.092e-02  7.068e-02  4.242e+03   0.720 0.471288    
+binbin2             4.463e-03  7.082e-02  4.241e+03   0.063 0.949751    
+binbin3            -1.978e-01  7.058e-02  4.241e+03  -2.803 0.005084 ** 
+binbin4            -1.533e-01  7.077e-02  4.241e+03  -2.166 0.030381 *  
+binbin5            -1.038e-01  7.072e-02  4.241e+03  -1.467 0.142316    
+binbin6            -1.187e-02  7.102e-02  4.241e+03  -0.167 0.867272    
+emotion727:binbin2  1.221e-01  9.994e-02  4.241e+03   1.222 0.221793    
+emotion727:binbin3  3.954e-01  9.977e-02  4.241e+03   3.963 7.51e-05 ***
+emotion727:binbin4  4.273e-01  9.970e-02  4.241e+03   4.286 1.86e-05 ***
+emotion727:binbin5  4.266e-01  9.970e-02  4.241e+03   4.279 1.92e-05 ***
+emotion727:binbin6  3.592e-01  1.001e-01  4.241e+03   3.587 0.000338 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Correlation of Fixed Effects:
+            (Intr) emt727 binbn2 binbn3 binbn4 binbn5 binbn6 e727:2 e727:3
+emotion727  -0.568                                                        
+binbin2     -0.566  0.505                                                 
+binbin3     -0.568  0.506  0.505                                          
+binbin4     -0.567  0.505  0.504  0.506                                   
+binbin5     -0.567  0.505  0.504  0.506  0.505                            
+binbin6     -0.565  0.503  0.502  0.504  0.502  0.503                     
+emtn727:bn2  0.401 -0.707 -0.709 -0.358 -0.357 -0.357 -0.356              
+emtn727:bn3  0.402 -0.708 -0.357 -0.707 -0.358 -0.358 -0.356  0.501       
+emtn727:bn4  0.402 -0.709 -0.358 -0.359 -0.710 -0.358 -0.357  0.501  0.502
+emtn727:bn5  0.402 -0.709 -0.358 -0.359 -0.358 -0.709 -0.357  0.501  0.502
+emtn727:bn6  0.401 -0.706 -0.356 -0.357 -0.356 -0.357 -0.709  0.499  0.500
+            e727:4 e727:5
+emotion727               
+binbin2                  
+binbin3                  
+binbin4                  
+binbin5                  
+binbin6                  
+emtn727:bn2              
+emtn727:bn3              
+emtn727:bn4              
+emtn727:bn5  0.503       
+emtn727:bn6  0.500  0.500</code></pre>
+</div>
+</div>
+<div id="test-brow-model-assumptions" class="section level3">
+<h3>test brow model assumptions</h3>
+<div id="plot-residuals-qqplot" class="section level5">
+<h5>plot residuals + qqplot</h5>
+<pre class="r"><code>plot(lm_model_brow)</code></pre>
+<p><img src="figure/7b_BROWanalysis_happy_angry.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>qqnorm(resid(lm_model_brow))
+qqline(resid(lm_model_brow))</code></pre>
+<p><img src="figure/7b_BROWanalysis_happy_angry.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Yikes qqplot not good, what to do about that….?</p>
+</div>
+</div>
+<div id="transform-to-correct-normality" class="section level3">
+<h3>transform to correct normality</h3>
+<p>Make a new column for log modulus</p>
+<pre class="r"><code>dfHA_brow &lt;- dfHA_brow %&gt;%
+  mutate(log_modulus = sign(Zdiff) * log(1+abs(Zdiff)))</code></pre>
+<div id="run-new-model" class="section level4">
+<h4>run new model</h4>
+<pre class="r"><code>lm_model_brow_logmod &lt;- lmer(log_modulus ~ emotion + bin + emotion*bin + (1|pp_no) + (1|trial), data=dfHA_brow, REML = FALSE) </code></pre>
+<div id="plot-residuals-qqplot-1" class="section level5">
+<h5>plot residuals + qqplot</h5>
+<pre class="r"><code>plot(lm_model_brow_logmod)</code></pre>
+<p><img src="figure/7b_BROWanalysis_happy_angry.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>qqnorm(resid(lm_model_brow_logmod))
+qqline(resid(lm_model_brow_logmod))</code></pre>
+<p><img src="figure/7b_BROWanalysis_happy_angry.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="notes-how-to-deal-with-qqplot-problem" class="section level1">
+<h1>NOTES: How to deal with qqplot problem</h1>
+<p>qqplots for both brow and cheek suggest that normality assumption is violated. log transform wont work in this case because there are negative values, can’t log transform negatives.</p>
+<p>A log modulus transform might work. This transform does a log of the absolute value and then puts the sign back. So negative values still end up negative.</p>
+<blockquote>
+<p>= sign(x) * log(1+abs(x))</p>
+</blockquote>
+<p><a href="http://www.statsblogs.com/2014/07/14/a-log-transformation-of-positive-and-negative-values/" class="uri">http://www.statsblogs.com/2014/07/14/a-log-transformation-of-positive-and-negative-values/</a></p>
+<p><a href="http://www.jstor.org/stable/pdf/2986305.pdf" class="uri">http://www.jstor.org/stable/pdf/2986305.pdf</a></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Sierra 10.12.6
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_AU.UTF-8/en_AU.UTF-8/en_AU.UTF-8/C/en_AU.UTF-8/en_AU.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] broom.mixed_0.2.6 lmerTest_3.1-0    lme4_1.1-21      
+ [4] Matrix_1.2-14     here_0.1          forcats_0.5.0    
+ [7] stringr_1.4.0     dplyr_1.0.1       purrr_0.3.3      
+[10] readr_1.3.1       tidyr_1.1.0       tibble_3.0.3     
+[13] ggplot2_3.3.2     tidyverse_1.3.0   workflowr_1.6.2  
+
+loaded via a namespace (and not attached):
+ [1] httr_1.4.1             jsonlite_1.7.0         splines_3.5.1         
+ [4] modelr_0.1.8           assertthat_0.2.1       blob_1.2.1            
+ [7] cellranger_1.1.0       yaml_2.2.1             numDeriv_2016.8-1.1   
+[10] pillar_1.4.6           backports_1.1.8        lattice_0.20-35       
+[13] glue_1.4.1             digest_0.6.25          promises_1.1.1        
+[16] rvest_0.3.6            minqa_1.2.4            colorspace_1.4-1      
+[19] plyr_1.8.6             htmltools_0.5.0        httpuv_1.5.2          
+[22] pkgconfig_2.0.3        broom_0.7.0            haven_2.3.1           
+[25] scales_1.1.1           whisker_0.4            later_1.1.0.1         
+[28] git2r_0.27.1           generics_0.0.2         ellipsis_0.3.1        
+[31] withr_2.2.0            TMB_1.7.15             cli_2.0.2             
+[34] magrittr_1.5           crayon_1.3.4           readxl_1.3.1          
+[37] evaluate_0.14          fs_1.4.1               fansi_0.4.1           
+[40] nlme_3.1-137           MASS_7.3-51.1          xml2_1.3.2            
+[43] tools_3.5.1            hms_0.5.3              lifecycle_0.2.0       
+[46] munsell_0.5.0          reprex_0.3.0           compiler_3.5.1        
+[49] rlang_0.4.7            grid_3.5.1             nloptr_1.2.2.1        
+[52] rstudioapi_0.11.0-9000 rmarkdown_1.15         boot_1.3-20           
+[55] gtable_0.3.0           DBI_1.0.0              reshape2_1.4.3        
+[58] R6_2.4.1               lubridate_1.7.4        knitr_1.23            
+[61] utf8_1.1.4             rprojroot_1.3-2        stringi_1.4.6         
+[64] Rcpp_1.0.5             vctrs_0.3.2            dbplyr_1.4.4          
+[67] tidyselect_1.1.0       xfun_0.8               coda_0.19-3           </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
