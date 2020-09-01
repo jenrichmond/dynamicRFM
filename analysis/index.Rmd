@@ -8,4 +8,18 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+This site documents the data cleaning/wrangling and analysis we have conducted thus far on EMG data from kids in response to dynamic stimuli.  
+
+The steps are linked in individual .Rmd documents below. 
+
+1. [use map to read and clean dynamic files](1_map_clean_dynamic_files.html)
+2. [bind clean files together](2_bind_clean_files.html)
+3. [deal with outliers in baseline data](3_baseline-outliers.html)
+4. [calculate Z scores](4_calculating_zscores.html)
+5. [deal with bin outliers](5_bin-outliers.html)
+6. [make some plots](6_plotting.html)
+7. [analyse cheek data](7_CHEEKanalysis_happy_angry.html)
+8. [analyse brow data](8_BROWanalysis_happy_angry.html)
+
+
+NOTE: these links can be edited in the index.Rmd file in the /analysis folder.
