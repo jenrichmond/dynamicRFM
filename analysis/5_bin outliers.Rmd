@@ -1,0 +1,85 @@
+---
+title: "5_bin outliers"
+author: "Jen Richmond"
+date: "05/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# load packages
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+# read combined clean no BL outliers data 
+
+```{r message=FALSE, warning=FALSE}
+bins <- read_csv(here("data", "combined", "4_zdiff_clean.csv"))
+
+```
+
+Make new screening column which is TRUE if the zdiff value for a particular bin is greater than 2SD the mean zdiff value for that trial for that participant/emotion/muscle. 
+
+```{r}
+bins_out <- bins %>%
+  group_by(pp_no, emotion, muscle, trial) %>%
+  mutate(meanZdiff = mean(Zdiff), sdZdiff = sd(Zdiff)) %>%
+  mutate(bin_outlier = if_else(Zdiff > meanZdiff + 2*sdZdiff, "TRUE", "FALSE"))
+```
+
+Make sure the new screen column is logical TRUE FALSE
+```{r}
+bins_out$bin_outlier <- as.logical(bins_out$bin_outlier)
+```
+
+How many bins are bad?
+
+```{r}
+outlier_true <- bins_out %>%
+  filter(bin_outlier == TRUE)
+```
+
+
+# test on 1 participant, 1 trial
+
+Pick a pp that has an example of bad bins and work out how to make the bad bin value be NA
+
+```{r}
+example <- bins_out %>%
+  filter(pp_no == "pp401") %>%
+  filter(emotion == "626")  %>%
+  filter(trial == "trial4")
+
+glimpse(example)
+ 
+```
+
+Use mutate and replace to replace the Zdiff value with NA, if bin_outlier == TRUE
+```{r}
+                         
+test <-  example %>% mutate(Zdiff = replace(Zdiff, bin_outlier == "TRUE", NA))
+```
+
+# apply bin screen to to whole dataframe
+
+```{r}
+bins_screen <- bins_out %>%
+  mutate(Zdiff = replace(Zdiff, bin_outlier == "TRUE", NA))
+
+# fix values in bin column 
+bins_screen$bin <- str_sub(bins_screen$bin, -4) 
+```
+
+# drop extra columns, write csv
+
+```{r}
+bins_screen <- bins_screen %>%
+  select(1:7) %>%
+  write_csv(here("data", "combined", "5_zdiff_binscreened.csv"))
+```
+

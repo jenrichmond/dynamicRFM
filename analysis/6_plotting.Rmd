@@ -1,0 +1,126 @@
+---
+title: "6_plotting"
+author: "Jen Richmond"
+date: "07/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# load packages
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(here)
+library(janitor)
+library(papaja)
+```
+
+# read bin screened data 
+
+```{r message=FALSE, warning=FALSE}
+plot_data <- read_csv(here("data", "combined", "5_zdiff_binscreened.csv"))
+
+glimpse(plot_data)
+```
+
+
+# recode emotion conditions
+
+adult Dynamic 
+626 = happy
+727 = angry
+828 = fear
+929 = sad
+
+```{r}
+
+plot_data <- plot_data %>%
+  mutate(emotion = recode(emotion, "626" = "happy",
+                         "727" = "angry",
+                          "828" = "fear",
+                       "929" = "sad", .default = "NA"))
+```
+
+
+# fix data type
+
+```{r}
+plot_data$emotion <- as.factor(plot_data$emotion)
+
+plot_data$trial <- as.factor(plot_data$trial)
+
+plot_data$bin <- as.factor(plot_data$bin)
+
+plot_data$muscle <- as.factor(plot_data$muscle)
+
+glimpse(plot_data)
+
+levels(plot_data$bin)
+```
+
+
+# Plot BROW
+
+```{r}
+plot_data %>% 
+  filter(muscle == "brow") %>%
+  group_by(emotion, bin) %>%
+  summarise(meanZ = mean(Zdiff, na.rm = TRUE)) %>%
+  ggplot(aes(x = bin, y = meanZ, group = emotion, colour = emotion)) +
+  geom_point() +
+ geom_line() +
+  theme_minimal() + 
+  labs(title = "mean difference in brow muscle activity from baseline", subtitle = "response to dynamic emotion displayed by adults")
+  
+```
+
+# Plot CHEEK
+
+```{r}
+plot_data %>% 
+  filter(muscle == "cheek") %>%
+  group_by(emotion, bin) %>%
+  summarise(meanZ = mean(Zdiff, na.rm = TRUE)) %>%
+  ggplot(aes(x = bin, y = meanZ, group = emotion, colour = emotion)) +
+  geom_point() +
+ geom_line() +
+  theme_minimal() +
+  labs(title = "mean difference in cheek muscle activity from baseline", subtitle = "response to dynamic emotion displayed by adults")
+  
+```
+
+# Plot brow and cheek together
+
+```{r}
+plot_data %>% 
+  group_by(emotion, bin, muscle) %>%
+  summarise(meanZ = mean(Zdiff, na.rm = TRUE)) %>%
+  ggplot(aes(x = bin, y = meanZ, group = emotion, colour = emotion)) +
+  geom_point() +
+ geom_line() +
+  theme_minimal() +
+  facet_wrap(~ muscle) +
+  labs(title = "mean difference in brow and cheek muscle activity from baseline", subtitle = "response to dynamic emotion displayed by adults")
+```
+
+
+
+
+# Just happy/angry
+
+```{r}
+plot_data %>% 
+  filter(emotion %in% c("happy", "angry")) %>%
+  group_by(emotion, bin, muscle) %>%
+  summarise(meanZ = mean(Zdiff, na.rm = TRUE)) %>%
+  ggplot(aes(x = bin, y = meanZ, group = emotion, colour = emotion)) +
+  geom_point() +
+ geom_line() +
+  theme_minimal() +
+  facet_wrap(~ muscle) +
+  labs(title = "mean difference in brow and cheek muscle activity from baseline", subtitle = "response to dynamic emotion displayed by adults")
+```
+
+

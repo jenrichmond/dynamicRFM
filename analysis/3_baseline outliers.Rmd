@@ -1,0 +1,107 @@
+---
+title: "3_baseline screening"
+author: "Jen Richmond"
+date: "03/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# load packages
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+# read combined clean data 
+
+```{r message=FALSE, warning=FALSE}
+
+clean_data <- read_csv(here("data", "combined", "1_clean_combined.csv"))
+
+```
+
+# select just baseline
+
+Arrange by pp, emotion, muscle. Add an empty bl_outlier column. 
+
+```{r}
+bl <- clean_data %>%
+  filter(bin == "bin_0") %>%
+  arrange(pp_no, emotion,  muscle) %>%
+  mutate(bl_outlier = "")
+
+stim <- clean_data %>%
+  filter(bin != "bin_0") %>%
+  arrange(pp_no, emotion,  muscle) %>%
+  mutate(bl_outlier = "")
+```
+
+
+# add mean, sd columns
+
+add mean and sd columns AND TRUE FALSE if bl_rms value is > 1.5sd above the mean for the participant, emotion, muscle
+```{r}
+bl_screen <- bl %>%
+  group_by(pp_no, emotion, muscle) %>%
+  mutate(meanRMS = mean(rms), sdRMS = sd(rms)) %>%
+  mutate(bl_outlier = if_else(rms > meanRMS + 1.5*sdRMS, "TRUE", "FALSE"))
+```
+
+# count how many trials have bad baseline
+
+```{r}
+glimpse(bl_screen)
+
+bl_screen$bl_outlier <- as.logical(bl_screen$bl_outlier)
+
+bl_screen %>%
+  group_by(pp_no, emotion, muscle) %>%
+  summarise(trialcount = n(), trialbad = sum(bl_outlier))
+```
+
+# drop extra variables to prep for bl_stim bind 
+
+```{r}
+bl_bind <- bl_screen %>%
+  select(pp_no:rms, bl_outlier)
+
+stim$bl_outlier <- as.logical(stim$bl_outlier) # bind only works if data type is the same in both dfs, change stim outlier col to logicalback to char
+```
+
+
+Bind bl and stim back together using bind_rows and then sort. Use fill to complete empty cells in the bl_outlier column. 
+```{r}
+bl_stim <- bind_rows(bl_bind, stim) %>%
+  arrange(pp_no, emotion, trial, muscle, bin_no) %>%
+   fill(bl_outlier)
+```
+
+
+# filter out whole trials with bl outliers, write to csv
+
+```{r}
+no_bl_outliers <- bl_stim %>%
+  filter(bl_outlier == FALSE) %>%
+  select(-bl_outlier)
+
+no_bl_outliers %>%
+  write_csv(here("data", "combined", "2_clean_no_bl_outliers.csv"))
+
+```
+
+# filter keep only outlier trials, write to csv
+
+Just in case you need to refer to which trials were thrown out later
+```{r}
+just_bl_outliers <- bl_stim %>%
+  filter(bl_outlier == TRUE) 
+
+just_bl_outliers %>%
+  write_csv(here("data", "combined", "3_clean_just_bl_outliers.csv"))
+
+```
+

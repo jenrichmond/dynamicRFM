@@ -1,0 +1,61 @@
+---
+title: "2_bind clean files"
+author: "Jen Richmond"
+date: "06/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# load packages
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(here)
+library(janitor)
+
+```
+
+
+# Define the path where the files live and get a list of files
+```{r}
+data_path <- here("data", "clean") 
+
+files <- dir(data_path, pattern = "*.csv") 
+```
+
+# Use map to read_csv on all those files, binding them into a single df
+```{r message=FALSE, warning=FALSE}
+clean_data <- files %>%
+  map(~ read_csv(file.path(data_path, .))) %>% 
+  reduce(rbind)
+```
+
+
+# separate info re pp_no, condition, emotion
+
+```{r}
+clean_data <- clean_data %>%
+  separate(col = file_name, into = c("pp_no", "condition", "emotion"), sep = "_")
+
+```
+
+# Drop .xlsx from emotion variable keeping chars 1:3
+```{r}
+clean_data <- clean_data %>%
+  mutate(emotion = str_sub(emotion, 1,3)) #  keep characters 1:3 from the string i.e 626.xlsx
+```
+
+  
+
+# write combined clean to csv
+
+```{r}
+clean_data %>%
+  write_csv(here("data", "combined", "1_clean_combined.csv"))
+```
+
+
+
+

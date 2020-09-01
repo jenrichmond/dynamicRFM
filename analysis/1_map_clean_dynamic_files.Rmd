@@ -1,0 +1,85 @@
+---
+title: "1_clean all dynamic files"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# load packages
+```{r message=FALSE, warning=FALSE}
+library(readxl)
+library(tidyverse)
+library(here)
+library(janitor)
+
+```
+
+# call functions
+```{r}
+
+source(here("analysis", "clean_write_function.R"))
+
+```
+
+Solution from https://stackoverflow.com/questions/47540471/load-multiple-excel-files-and-name-object-after-a-file-name
+
+# set up path and files list
+
+
+```{r}
+filepath <- here("data", "dirty")
+
+file_list <- list.files(path = filepath, pattern='*.xlsx')
+
+
+```
+
+# 1. map: read, clean, write to csv
+
+This option reads the dirty xlsx files into a list, runs clean_write on that list, which returns exported clean csv files and a list with clean data in each list item. How...?
+
+the map function takes a list (in this case the list of files) and runs a function (in this case read_excel + mutate(filename)) across all of them. 
+
+map will return a list, in this case a list containing each of the read in excel files + a filename column as a separate item. 
+
+purrr loves lists, once all the files are read in as list items, can use map again (or maybe even map_df- which returns a dataframe- see option 2) to run cleanwrite_emg across all items in the list?
+
+#### A. map read_excel
+
+updated 21/5/2020 advice from Jenny Bryan, option 1 https://jenrichmond.github.io/map_excel_reprex/
+
+```{r message=FALSE, warning=FALSE}
+list_raw_emg <- file_list %>% 
+  map(~ read_excel(path = here("data", "dirty", .x), range = "A4:AE11")  %>%
+        mutate("file_name" = .x))
+
+```
+
+```{r}
+# get first item of list for testing- looks good
+rawemg1 <- list_raw_emg[[1]]
+```
+
+
+#### B. map cleanwrite_emg
+Run cleanwrite_emg on list of files using map, returns a list. Each item in the list is a cleaned file AND each is written to csv in the clean_data folder. 
+
+```{r}
+list_cleanwrite_emg <- list_raw_emg %>%
+  map(~ cleanwrite_emg(.x))
+```
+
+
+#### C. Check the list items 
+
+did you get what you want? look at one item from the cleanemg emglist. There should also be clean csv files in your folder. 
+
+```{r}
+cleanemg159 <- list_cleanwrite_emg[[159]]
+```
+
+YES!
+
