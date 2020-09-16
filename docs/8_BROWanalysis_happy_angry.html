@@ -10,9 +10,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Jen Richmond" />
 
+<meta name="date" content="2020-10-07" />
 
-<title>1_clean all dynamic files</title>
+<title>8_brow_analysis</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -378,7 +380,9 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">1_clean all dynamic files</h1>
+<h1 class="title toc-ignore">8_brow_analysis</h1>
+<h4 class="author">Jen Richmond</h4>
+<h4 class="date">10/07/2020</h4>
 
 </div>
 
@@ -538,7 +542,7 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <div id="versions" class="tab-pane fade">
 
 <p>
-These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/1_map_clean_dynamic_files.Rmd</code>) and HTML (<code>docs/1_map_clean_dynamic_files.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/8_BROWanalysis_happy_angry.Rmd</code>) and HTML (<code>docs/8_BROWanalysis_happy_angry.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -564,36 +568,19 @@ Message
 <tbody>
 <tr>
 <td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jenrichmond/dynamicRFM/f528945e81297024f3995f3ef99add5f289bf900/docs/1_map_clean_dynamic_files.html" target="_blank">f528945</a>
-</td>
-<td>
-Your Name
-</td>
-<td>
-2020-09-01
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
 Rmd
 </td>
 <td>
-<a href="https://github.com/jenrichmond/dynamicRFM/blob/d5b2b96dcfbf52b0b2583c753d8fb7a59b29d248/analysis/1_map_clean_dynamic_files.Rmd" target="_blank">d5b2b96</a>
+<a href="https://github.com/jenrichmond/dynamicRFM/blob/12b577b4fc6f02535cc866bc1dde5871360386fb/analysis/8_BROWanalysis_happy_angry.Rmd" target="_blank">12b577b</a>
 </td>
 <td>
 Your Name
 </td>
 <td>
-2020-09-01
+2020-09-16
 </td>
 <td>
-publish analysis files
+z check code
 </td>
 </tr>
 </tbody>
@@ -605,48 +592,223 @@ publish analysis files
 </div>
 <div id="load-packages" class="section level1">
 <h1>load packages</h1>
-<pre class="r"><code>library(readxl)
-library(tidyverse)
-library(here)
-library(janitor)</code></pre>
-</div>
-<div id="call-functions" class="section level1">
-<h1>call functions</h1>
-<pre class="r"><code>source(here(&quot;analysis&quot;, &quot;clean_write_function.R&quot;))</code></pre>
-<p>Solution from <a href="https://stackoverflow.com/questions/47540471/load-multiple-excel-files-and-name-object-after-a-file-name" class="uri">https://stackoverflow.com/questions/47540471/load-multiple-excel-files-and-name-object-after-a-file-name</a></p>
-</div>
-<div id="set-up-path-and-files-list" class="section level1">
-<h1>set up path and files list</h1>
-<pre class="r"><code>filepath &lt;- here(&quot;data&quot;, &quot;dirty&quot;)
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>Warning: package &#39;tidyverse&#39; was built under R version 3.5.2</code></pre>
+<pre><code>── Attaching packages ──────────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>✓ ggplot2 3.3.2     ✓ purrr   0.3.3
+✓ tibble  3.0.3     ✓ dplyr   1.0.1
+✓ tidyr   1.1.0     ✓ stringr 1.4.0
+✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
+<pre><code>Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>Warning: package &#39;stringr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>Warning: package &#39;forcats&#39; was built under R version 3.5.2</code></pre>
+<pre><code>── Conflicts ─────────────────────────────────────────────────── tidyverse_conflicts() ──
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(here)</code></pre>
+<pre><code>here() starts at /Users/jenny/OneDrive - UNSW/ALL_R_stuff/1. PROJECTS/4. DATA_ANALYSIS/HONOURS2020/dynamicRFM</code></pre>
+<pre class="r"><code>library(lme4)</code></pre>
+<pre><code>Warning: package &#39;lme4&#39; was built under R version 3.5.2</code></pre>
+<pre><code>Loading required package: Matrix</code></pre>
+<pre><code>
+Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:tidyr&#39;:
 
-file_list &lt;- list.files(path = filepath, pattern=&#39;*.xlsx&#39;)</code></pre>
+    expand, pack, unpack</code></pre>
+<pre class="r"><code>library(lmerTest)</code></pre>
+<pre><code>Warning: package &#39;lmerTest&#39; was built under R version 3.5.2</code></pre>
+<pre><code>
+Attaching package: &#39;lmerTest&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:lme4&#39;:
+
+    lmer</code></pre>
+<pre><code>The following object is masked from &#39;package:stats&#39;:
+
+    step</code></pre>
+<pre class="r"><code>library(broom.mixed)</code></pre>
+<pre><code>Warning in checkMatrixPackageVersion(): Package version inconsistency detected.
+TMB was built with Matrix version 1.2.15
+Current Matrix version is 1.2.14
+Please re-install &#39;TMB&#39; from source using install.packages(&#39;TMB&#39;, type = &#39;source&#39;) or ask CRAN for a binary version of &#39;TMB&#39; matching CRAN&#39;s &#39;Matrix&#39; package</code></pre>
+<pre class="r"><code># note if you run LMM with just the lme4 package you wont get any pvalues 
+
+# loading lmerTest as well gets you pvalues when you test anova(model)</code></pre>
 </div>
-<div id="map-read-clean-write-to-csv" class="section level1">
-<h1>1. map: read, clean, write to csv</h1>
-<p>This option reads the dirty xlsx files into a list, runs clean_write on that list, which returns exported clean csv files and a list with clean data in each list item. How…?</p>
-<p>the map function takes a list (in this case the list of files) and runs a function (in this case read_excel + mutate(filename)) across all of them.</p>
-<p>map will return a list, in this case a list containing each of the read in excel files + a filename column as a separate item.</p>
-<p>purrr loves lists, once all the files are read in as list items, can use map again (or maybe even map_df- which returns a dataframe- see option 2) to run cleanwrite_emg across all items in the list?</p>
-<div id="a.-map-read_excel" class="section level4">
-<h4>A. map read_excel</h4>
-<p>updated 21/5/2020 advice from Jenny Bryan, option 1 <a href="https://jenrichmond.github.io/map_excel_reprex/" class="uri">https://jenrichmond.github.io/map_excel_reprex/</a></p>
-<pre class="r"><code>list_raw_emg &lt;- file_list %&gt;% 
-  map(~ read_excel(path = here(&quot;data&quot;, &quot;dirty&quot;, .x), range = &quot;A4:AE11&quot;)  %&gt;%
-        mutate(&quot;file_name&quot; = .x))</code></pre>
-<pre class="r"><code># get first item of list for testing- looks good
-rawemg1 &lt;- list_raw_emg[[1]]</code></pre>
+<div id="read-in-data" class="section level1">
+<h1>read in data</h1>
+<pre class="r"><code>df &lt;- read_csv(here(&quot;data&quot;, &quot;combined&quot;, &quot;5_zdiff_binscreened.csv&quot;)) </code></pre>
+<pre><code>Parsed with column specification:
+cols(
+  pp_no = col_character(),
+  condition = col_character(),
+  emotion = col_double(),
+  trial = col_character(),
+  muscle = col_character(),
+  bin = col_character(),
+  Zdiff = col_double()
+)</code></pre>
+<pre class="r"><code># fix data types, all chars to factors
+df$emotion &lt;- as.factor(df$emotion)
+
+df &lt;- df %&gt;% mutate_if(is.character,as.factor)
+
+glimpse(df)</code></pre>
+<pre><code>Rows: 18,576
+Columns: 7
+$ pp_no     &lt;fct&gt; pp401, pp401, pp401, pp401, pp401, pp401, pp401, pp401…
+$ condition &lt;fct&gt; dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn,…
+$ emotion   &lt;fct&gt; 626, 626, 626, 626, 626, 626, 626, 626, 626, 626, 626,…
+$ trial     &lt;fct&gt; trial1, trial1, trial1, trial1, trial1, trial1, trial1…
+$ muscle    &lt;fct&gt; brow, brow, brow, brow, brow, brow, cheek, cheek, chee…
+$ bin       &lt;fct&gt; bin1, bin2, bin3, bin4, bin5, bin6, bin1, bin2, bin3, …
+$ Zdiff     &lt;dbl&gt; 0.149188943, 0.159161634, -0.245679429, -0.559687470, …</code></pre>
 </div>
-<div id="b.-map-cleanwrite_emg" class="section level4">
-<h4>B. map cleanwrite_emg</h4>
-<p>Run cleanwrite_emg on list of files using map, returns a list. Each item in the list is a cleaned file AND each is written to csv in the clean_data folder.</p>
-<pre class="r"><code>list_cleanwrite_emg &lt;- list_raw_emg %&gt;%
-  map(~ cleanwrite_emg(.x))</code></pre>
+<div id="happy-angry" class="section level1">
+<h1>HAPPY-ANGRY</h1>
+<div id="brow" class="section level2">
+<h2>BROW</h2>
+<p>Make dataframe with just happy/angry for BROW</p>
+<pre class="r"><code>dfHA_brow &lt;- df %&gt;%
+  filter(emotion %in% c(&quot;626&quot;, &quot;727&quot;)) %&gt;%
+  filter(muscle == &quot;brow&quot;) %&gt;%
+  arrange(pp_no, emotion, trial, bin)
+
+glimpse(dfHA_brow)</code></pre>
+<pre><code>Rows: 4,668
+Columns: 7
+$ pp_no     &lt;fct&gt; pp401, pp401, pp401, pp401, pp401, pp401, pp401, pp401…
+$ condition &lt;fct&gt; dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn, dyn,…
+$ emotion   &lt;fct&gt; 626, 626, 626, 626, 626, 626, 626, 626, 626, 626, 626,…
+$ trial     &lt;fct&gt; trial1, trial1, trial1, trial1, trial1, trial1, trial2…
+$ muscle    &lt;fct&gt; brow, brow, brow, brow, brow, brow, brow, brow, brow, …
+$ bin       &lt;fct&gt; bin1, bin2, bin3, bin4, bin5, bin6, bin1, bin2, bin3, …
+$ Zdiff     &lt;dbl&gt; 0.149188943, 0.159161634, -0.245679429, -0.559687470, …</code></pre>
+<p>Evidence of mimicry to ANGRY would be evidenced by greater brow acvitity over time (bin) for angry than happy.</p>
+<p>LMM- looking to predict Zdiff from emotion (happy angry), and bin (1-6) and their interaction, allowing intercepts to vary for participant and trial.</p>
+<div id="using-lme4-package-w-lmertest-package" class="section level3">
+<h3>Using lme4 package w lmerTest package</h3>
+<div id="construct-model" class="section level4">
+<h4>construct model</h4>
+<pre class="r"><code>lm_model_brow &lt;- lmer(Zdiff ~ emotion + bin + emotion*bin + (1|pp_no) + (1|trial), data=dfHA_brow, REML = FALSE) </code></pre>
 </div>
-<div id="c.-check-the-list-items" class="section level4">
-<h4>C. Check the list items</h4>
-<p>did you get what you want? look at one item from the cleanemg emglist. There should also be clean csv files in your folder.</p>
-<pre class="r"><code>cleanemg159 &lt;- list_cleanwrite_emg[[159]]</code></pre>
-<p>YES!</p>
+<div id="use-anova-to-estimate-effects" class="section level4">
+<h4>use anova to estimate effects</h4>
+<pre class="r"><code>anova(lm_model_brow)</code></pre>
+<pre><code>Type III Analysis of Variance Table with Satterthwaite&#39;s method
+             Sum Sq Mean Sq NumDF  DenDF  F value    Pr(&gt;F)    
+emotion     123.555 123.555     1 4244.1 138.6287 &lt; 2.2e-16 ***
+bin          14.970   2.994     5 4241.0   3.3593  0.004959 ** 
+emotion:bin  29.645   5.929     5 4241.0   6.6523 3.524e-06 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="use-summary-to-get-coefficients" class="section level4">
+<h4>use summary to get coefficients</h4>
+<pre class="r"><code>summary(lm_model_brow)</code></pre>
+<pre><code>Linear mixed model fit by maximum likelihood . t-tests use
+  Satterthwaite&#39;s method [lmerModLmerTest]
+Formula: Zdiff ~ emotion + bin + emotion * bin + (1 | pp_no) + (1 | trial)
+   Data: dfHA_brow
+
+     AIC      BIC   logLik deviance df.resid 
+ 11827.3  11922.8  -5898.6  11797.3     4283 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.2590 -0.4120 -0.1134  0.1939 11.4263 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ pp_no    (Intercept) 0.047736 0.21849 
+ trial    (Intercept) 0.003859 0.06212 
+ Residual             0.891266 0.94407 
+Number of obs: 4298, groups:  pp_no, 50; trial, 8
+
+Fixed effects:
+                     Estimate Std. Error         df t value Pr(&gt;|t|)    
+(Intercept)         4.107e-02  6.296e-02  1.718e+02   0.652 0.515066    
+emotion727          5.092e-02  7.068e-02  4.242e+03   0.720 0.471288    
+binbin2             4.463e-03  7.082e-02  4.241e+03   0.063 0.949751    
+binbin3            -1.978e-01  7.058e-02  4.241e+03  -2.803 0.005084 ** 
+binbin4            -1.533e-01  7.077e-02  4.241e+03  -2.166 0.030381 *  
+binbin5            -1.038e-01  7.072e-02  4.241e+03  -1.467 0.142316    
+binbin6            -1.187e-02  7.102e-02  4.241e+03  -0.167 0.867272    
+emotion727:binbin2  1.221e-01  9.994e-02  4.241e+03   1.222 0.221793    
+emotion727:binbin3  3.954e-01  9.977e-02  4.241e+03   3.963 7.51e-05 ***
+emotion727:binbin4  4.273e-01  9.970e-02  4.241e+03   4.286 1.86e-05 ***
+emotion727:binbin5  4.266e-01  9.970e-02  4.241e+03   4.279 1.92e-05 ***
+emotion727:binbin6  3.592e-01  1.001e-01  4.241e+03   3.587 0.000338 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Correlation of Fixed Effects:
+            (Intr) emt727 binbn2 binbn3 binbn4 binbn5 binbn6 e727:2 e727:3
+emotion727  -0.568                                                        
+binbin2     -0.566  0.505                                                 
+binbin3     -0.568  0.506  0.505                                          
+binbin4     -0.567  0.505  0.504  0.506                                   
+binbin5     -0.567  0.505  0.504  0.506  0.505                            
+binbin6     -0.565  0.503  0.502  0.504  0.502  0.503                     
+emtn727:bn2  0.401 -0.707 -0.709 -0.358 -0.357 -0.357 -0.356              
+emtn727:bn3  0.402 -0.708 -0.357 -0.707 -0.358 -0.358 -0.356  0.501       
+emtn727:bn4  0.402 -0.709 -0.358 -0.359 -0.710 -0.358 -0.357  0.501  0.502
+emtn727:bn5  0.402 -0.709 -0.358 -0.359 -0.358 -0.709 -0.357  0.501  0.502
+emtn727:bn6  0.401 -0.706 -0.356 -0.357 -0.356 -0.357 -0.709  0.499  0.500
+            e727:4 e727:5
+emotion727               
+binbin2                  
+binbin3                  
+binbin4                  
+binbin5                  
+binbin6                  
+emtn727:bn2              
+emtn727:bn3              
+emtn727:bn4              
+emtn727:bn5  0.503       
+emtn727:bn6  0.500  0.500</code></pre>
+</div>
+</div>
+<div id="test-brow-model-assumptions" class="section level3">
+<h3>test brow model assumptions</h3>
+<div id="plot-residuals-qqplot" class="section level5">
+<h5>plot residuals + qqplot</h5>
+<pre class="r"><code>plot(lm_model_brow)</code></pre>
+<p><img src="figure/8_BROWanalysis_happy_angry.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>qqnorm(resid(lm_model_brow))
+qqline(resid(lm_model_brow))</code></pre>
+<p><img src="figure/8_BROWanalysis_happy_angry.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Yikes qqplot not good, what to do about that….?</p>
+</div>
+</div>
+<div id="transform-to-correct-normality" class="section level3">
+<h3>transform to correct normality</h3>
+<p>Make a new column for log modulus</p>
+<pre class="r"><code>dfHA_brow &lt;- dfHA_brow %&gt;%
+  mutate(log_modulus = sign(Zdiff) * log(1+abs(Zdiff)))</code></pre>
+<div id="run-new-model" class="section level4">
+<h4>run new model</h4>
+<pre class="r"><code>lm_model_brow_logmod &lt;- lmer(log_modulus ~ emotion + bin + emotion*bin + (1|pp_no) + (1|trial), data=dfHA_brow, REML = FALSE) </code></pre>
+<div id="plot-residuals-qqplot-1" class="section level5">
+<h5>plot residuals + qqplot</h5>
+<pre class="r"><code>plot(lm_model_brow_logmod)</code></pre>
+<p><img src="figure/8_BROWanalysis_happy_angry.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>qqnorm(resid(lm_model_brow_logmod))
+qqline(resid(lm_model_brow_logmod))</code></pre>
+<p><img src="figure/8_BROWanalysis_happy_angry.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="notes-how-to-deal-with-qqplot-problem" class="section level1">
+<h1>NOTES: How to deal with qqplot problem</h1>
+<p>qqplots for both brow and cheek suggest that normality assumption is violated. log transform wont work in this case because there are negative values, can’t log transform negatives.</p>
+<p>A log modulus transform might work. This transform does a log of the absolute value and then puts the sign back. So negative values still end up negative.</p>
+<blockquote>
+<p>= sign(x) * log(1+abs(x))</p>
+</blockquote>
+<p><a href="http://www.statsblogs.com/2014/07/14/a-log-transformation-of-positive-and-negative-values/" class="uri">http://www.statsblogs.com/2014/07/14/a-log-transformation-of-positive-and-negative-values/</a></p>
+<p><a href="http://www.jstor.org/stable/pdf/2986305.pdf" class="uri">http://www.jstor.org/stable/pdf/2986305.pdf</a></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -670,32 +832,36 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] janitor_1.2.0   here_0.1        forcats_0.5.0   stringr_1.4.0  
- [5] dplyr_1.0.1     purrr_0.3.3     readr_1.3.1     tidyr_1.1.0    
- [9] tibble_3.0.3    ggplot2_3.3.2   tidyverse_1.3.0 readxl_1.3.1   
-[13] workflowr_1.6.2
+ [1] broom.mixed_0.2.6 lmerTest_3.1-0    lme4_1.1-21      
+ [4] Matrix_1.2-14     here_0.1          forcats_0.5.0    
+ [7] stringr_1.4.0     dplyr_1.0.1       purrr_0.3.3      
+[10] readr_1.3.1       tidyr_1.1.0       tibble_3.0.3     
+[13] ggplot2_3.3.2     tidyverse_1.3.0   workflowr_1.6.2  
 
 loaded via a namespace (and not attached):
- [1] tidyselect_1.1.0       xfun_0.8               haven_2.3.1           
- [4] colorspace_1.4-1       vctrs_0.3.2            generics_0.0.2        
- [7] htmltools_0.5.0        yaml_2.2.1             blob_1.2.1            
-[10] rlang_0.4.7            later_1.1.0.1          pillar_1.4.6          
-[13] withr_2.2.0            glue_1.4.1             DBI_1.0.0             
-[16] dbplyr_1.4.4           modelr_0.1.8           lifecycle_0.2.0       
-[19] munsell_0.5.0          gtable_0.3.0           cellranger_1.1.0      
-[22] rvest_0.3.6            evaluate_0.14          knitr_1.23            
-[25] httpuv_1.5.2           fansi_0.4.1            broom_0.7.0           
-[28] Rcpp_1.0.5             promises_1.1.1         backports_1.1.8       
-[31] scales_1.1.1           jsonlite_1.7.0         fs_1.4.1              
-[34] hms_0.5.3              digest_0.6.25          stringi_1.4.6         
-[37] rprojroot_1.3-2        grid_3.5.1             cli_2.0.2             
-[40] tools_3.5.1            magrittr_1.5           crayon_1.3.4          
-[43] whisker_0.4            pkgconfig_2.0.3        ellipsis_0.3.1        
-[46] xml2_1.3.2             reprex_0.3.0           lubridate_1.7.4       
-[49] rematch_1.0.1          rstudioapi_0.11.0-9000 assertthat_0.2.1      
-[52] rmarkdown_1.15         httr_1.4.1             R6_2.4.1              
-[55] git2r_0.27.1           compiler_3.5.1        </code></pre>
-</div>
+ [1] httr_1.4.1             jsonlite_1.7.0         splines_3.5.1         
+ [4] modelr_0.1.8           assertthat_0.2.1       blob_1.2.1            
+ [7] cellranger_1.1.0       yaml_2.2.1             numDeriv_2016.8-1.1   
+[10] pillar_1.4.6           backports_1.1.8        lattice_0.20-35       
+[13] glue_1.4.1             digest_0.6.25          promises_1.1.1        
+[16] rvest_0.3.6            minqa_1.2.4            colorspace_1.4-1      
+[19] plyr_1.8.6             htmltools_0.5.0        httpuv_1.5.2          
+[22] pkgconfig_2.0.3        broom_0.7.0            haven_2.3.1           
+[25] scales_1.1.1           whisker_0.4            later_1.1.0.1         
+[28] git2r_0.27.1           generics_0.0.2         ellipsis_0.3.1        
+[31] withr_2.2.0            TMB_1.7.15             cli_2.0.2             
+[34] magrittr_1.5           crayon_1.3.4           readxl_1.3.1          
+[37] evaluate_0.14          fs_1.4.1               fansi_0.4.1           
+[40] nlme_3.1-137           MASS_7.3-51.1          xml2_1.3.2            
+[43] tools_3.5.1            hms_0.5.3              lifecycle_0.2.0       
+[46] munsell_0.5.0          reprex_0.3.0           compiler_3.5.1        
+[49] rlang_0.4.7            grid_3.5.1             nloptr_1.2.2.1        
+[52] rstudioapi_0.11.0-9000 rmarkdown_1.15         boot_1.3-20           
+[55] gtable_0.3.0           DBI_1.0.0              reshape2_1.4.3        
+[58] R6_2.4.1               lubridate_1.7.4        knitr_1.23            
+[61] utf8_1.1.4             rprojroot_1.3-2        stringi_1.4.6         
+[64] Rcpp_1.0.5             vctrs_0.3.2            dbplyr_1.4.4          
+[67] tidyselect_1.1.0       xfun_0.8               coda_0.19-3           </code></pre>
 </div>
 </div>
 

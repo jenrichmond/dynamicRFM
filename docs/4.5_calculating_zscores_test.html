@@ -13,7 +13,7 @@
 <meta name="author" content="Jenny Richmond" />
 
 
-<title>4_calculating_zscores</title>
+<title>4.5_calculating_zscores_test</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -379,9 +379,9 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">4_calculating_zscores</h1>
+<h1 class="title toc-ignore">4.5_calculating_zscores_test</h1>
 <h4 class="author">Jenny Richmond</h4>
-<h4 class="date">23/06/2020</h4>
+<h4 class="date">16 September, 2020</h4>
 
 </div>
 
@@ -541,7 +541,7 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <div id="versions" class="tab-pane fade">
 
 <p>
-These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/4_calculating_zscores.Rmd</code>) and HTML (<code>docs/4_calculating_zscores.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/4.5_calculating_zscores_test.Rmd</code>) and HTML (<code>docs/4.5_calculating_zscores_test.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -567,36 +567,19 @@ Message
 <tbody>
 <tr>
 <td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jenrichmond/dynamicRFM/f528945e81297024f3995f3ef99add5f289bf900/docs/4_calculating_zscores.html" target="_blank">f528945</a>
-</td>
-<td>
-Your Name
-</td>
-<td>
-2020-09-01
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
 Rmd
 </td>
 <td>
-<a href="https://github.com/jenrichmond/dynamicRFM/blob/d5b2b96dcfbf52b0b2583c753d8fb7a59b29d248/analysis/4_calculating_zscores.Rmd" target="_blank">d5b2b96</a>
+<a href="https://github.com/jenrichmond/dynamicRFM/blob/12b577b4fc6f02535cc866bc1dde5871360386fb/analysis/4.5_calculating_zscores_test.Rmd" target="_blank">12b577b</a>
 </td>
 <td>
 Your Name
 </td>
 <td>
-2020-09-01
+2020-09-16
 </td>
 <td>
-publish analysis files
+z check code
 </td>
 </tr>
 </tbody>
@@ -635,22 +618,34 @@ options(scipen = 999) #set no scientific notation</code></pre>
 <div id="read-in-data" class="section level2">
 <h2>read in data</h2>
 <pre class="r"><code>data &lt;- read_csv(here(&quot;data&quot;, &quot;combined&quot;, &quot;2_clean_no_bl_outliers.csv&quot;))</code></pre>
-<div id="try-it-out-on-one-pp-first" class="section level3">
-<h3>Try it out on one pp first</h3>
-<pre class="r"><code>pp403 &lt;- data %&gt;%
+</div>
+</div>
+<div id="testing-z-score-process" class="section level1">
+<h1>Testing z score process</h1>
+<p>In Sophie’s analysis she separated her data into baseline and bins and calculated z scores separately before joining them back together. For Sahar and Riley’s analysis, we have calcualted z scores with baseline and bins together.</p>
+<p>This rmd tests whether separate or togehter makes any difference to the distribution of z scores.</p>
+<blockquote>
+<p>NOTE all dataframes created from the together process have a “t” in front, all df created via the separate process have a “s” in front, to allow for comparisons</p>
+</blockquote>
+</div>
+<div id="together" class="section level1">
+<h1><strong>TOGETHER</strong></h1>
+<div id="pp-first" class="section level3">
+<h3>1 pp first</h3>
+<pre class="r"><code>tpp403 &lt;- data %&gt;%
   filter(pp_no == &quot;pp403&quot;)
 
 # make it wide 
-widepp403 &lt;- pp403 %&gt;%
+twidepp403 &lt;- tpp403 %&gt;%
   pivot_wider(names_from = muscle, values_from = rms)
 
 # create new variables called zbrow and zcheek using the scale function and specifying center = TRUE and scale = TRUE
 
-widepp403$zbrow = scale(widepp403$brow, center = TRUE, scale = TRUE)
-widepp403$zcheek = scale(widepp403$cheek, center = TRUE, scale = TRUE)
+twidepp403$zbrow = scale(twidepp403$brow, center = TRUE, scale = TRUE)
+twidepp403$zcheek = scale(twidepp403$cheek, center = TRUE, scale = TRUE)
 
 # Check that the mean of the new zbrow and zcheek columns is 0 - this is what we want... 
-summary(widepp403)</code></pre>
+summary(twidepp403)</code></pre>
 <pre><code>    pp_no            condition            emotion          bin           
  Length:210         Length:210         Min.   :626.0   Length:210        
  Class :character   Class :character   1st Qu.:626.0   Class :character  
@@ -676,18 +671,17 @@ summary(widepp403)</code></pre>
  Max.   : 9.215078   Max.   :11.227675  
  NA&#39;s   :7           NA&#39;s   :7          </code></pre>
 </div>
-</div>
-<div id="now-do-all-the-data" class="section level2">
-<h2>Now do all the data</h2>
+<div id="all-the-data" class="section level2">
+<h2>all the data</h2>
 <p>make data wide, use mutate to make new z variables</p>
-<pre class="r"><code>data_zscore &lt;- data %&gt;%
+<pre class="r"><code>tdata_zscore &lt;- data %&gt;%
   pivot_wider(names_from = muscle, 
               values_from = rms) %&gt;%
   group_by(pp_no) %&gt;%
   mutate(Zbrow = scale(brow, center = TRUE, scale = TRUE)) %&gt;%
   mutate(Zcheek = scale(cheek, center = TRUE, scale = TRUE))
   
-summary(data_zscore)</code></pre>
+summary(tdata_zscore)</code></pre>
 <pre><code>    pp_no            condition            emotion          bin           
  Length:10836       Length:10836       Min.   :626.0   Length:10836      
  Class :character   Class :character   1st Qu.:701.8   Class :character  
@@ -719,23 +713,22 @@ summary(data_zscore)</code></pre>
 <p><code>data_z_manual &lt;- data_wide %&gt;%  group_by(pp_no) %&gt;% mutate(Zbrow = (brow - mean(brow))/sd(brow)) %&gt;% mutate(Zcheek = (cheek - mean(cheek))/sd(cheek))</code></p>
 </blockquote>
 </div>
-</div>
-<div id="calculating-difference-scores" class="section level1">
-<h1>Calculating Difference Scores</h1>
+<div id="difference-scores" class="section level2">
+<h2>Difference Scores</h2>
 <p>Need to calculate difference scores from baseline. Need to make BIN wide to allow for calculations across columns. Its a bit difficult to do that for both muscles at the same time, so lets separate and work out the difference scores for brow and cheek separately.</p>
 <div id="brow-first" class="section level3">
 <h3>BROW FIRST</h3>
 <div id="add-a-muscle-column" class="section level4">
 <h4>Add a muscle column</h4>
 <p>Just to make things easier to join back together later</p>
-<pre class="r"><code>brow_z &lt;- data_zscore %&gt;%
+<pre class="r"><code>tbrow_z &lt;- tdata_zscore %&gt;%
   mutate(muscle = &quot;brow&quot;) %&gt;%
   select(pp_no, condition, emotion, bin, trial, muscle, Zbrow) </code></pre>
 </div>
 <div id="make-the-bin-column-wide" class="section level4">
 <h4>Make the bin column wide</h4>
 <p>… and rename bin_0 as BL (i.e. baseline)</p>
-<pre class="r"><code>brow_z_wide &lt;- brow_z %&gt;%
+<pre class="r"><code>tbrow_z_wide &lt;- tbrow_z %&gt;%
   pivot_wider(names_from = bin, 
               values_from = Zbrow) %&gt;%
   rename(BL = bin_0)</code></pre>
@@ -744,7 +737,7 @@ summary(data_zscore)</code></pre>
 <h4>mutate() diff scores</h4>
 <p>Use wide columns to calcuate the difference between each bin column and BL, creating a new set of columns starting with “diff”, drop BL column and all columns starting with bin (i.e. raw z scores).</p>
 <p>note - This df contains for each bin the difference between stimulus and basline, so POSITIVE difference scores = greater activity during STIM than BL and NEGATIVE difference scores = greater activity during BL than STIM</p>
-<pre class="r"><code>brow_z_diff &lt;- brow_z_wide %&gt;% 
+<pre class="r"><code>tbrow_z_diff &lt;- tbrow_z_wide %&gt;% 
   mutate(diff_bin1 = bin_1 - BL, 
          diff_bin2 = bin_2 - BL,
          diff_bin3 = bin_3- BL, 
@@ -755,7 +748,7 @@ summary(data_zscore)</code></pre>
 </div>
 <div id="make-data-long-again" class="section level4">
 <h4>Make data long again</h4>
-<pre class="r"><code>brow_z_diff_long &lt;- brow_z_diff %&gt;%
+<pre class="r"><code>tbrow_z_diff_long &lt;- tbrow_z_diff %&gt;%
   pivot_longer(names_to = &quot;bin&quot;, 
                values_to = &quot;Zdiff&quot;, 
                diff_bin1:diff_bin6)</code></pre>
@@ -768,46 +761,9 @@ Attaching package: &#39;naniar&#39;</code></pre>
 <pre><code>The following object is masked from &#39;package:skimr&#39;:
 
     n_complete</code></pre>
-<pre class="r"><code>vis_miss(brow_z_diff_long)</code></pre>
+<pre class="r"><code>vis_miss(tbrow_z_diff_long)</code></pre>
 <pre><code>Warning: Removed 9288 rows containing missing values (geom_raster).</code></pre>
-<p><img src="figure/4_calculating_zscores.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
-Past versions of unnamed-chunk-9-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-9-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jenrichmond/dynamicRFM/blob/f528945e81297024f3995f3ef99add5f289bf900/docs/figure/4_calculating_zscores.Rmd/unnamed-chunk-9-1.png" target="_blank">f528945</a>
-</td>
-<td>
-Your Name
-</td>
-<td>
-2020-09-01
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/4.5_calculating_zscores_test.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="now-cheek" class="section level3">
@@ -815,14 +771,14 @@ Your Name
 <div id="add-a-muscle-column-1" class="section level4">
 <h4>add a muscle column</h4>
 <p>…to make things easier to join back together later</p>
-<pre class="r"><code>cheek_z &lt;- data_zscore %&gt;%
+<pre class="r"><code>tcheek_z &lt;- tdata_zscore %&gt;%
   mutate(muscle = &quot;cheek&quot;) %&gt;%
   select(pp_no, condition, emotion, bin, trial, muscle, Zcheek) </code></pre>
 </div>
 <div id="make-the-bin-column-wide-1" class="section level4">
 <h4>Make the bin column wide</h4>
 <p>…and rename bin_0 as BL (i.e. baseline)</p>
-<pre class="r"><code>cheek_z_wide &lt;- cheek_z %&gt;%
+<pre class="r"><code>tcheek_z_wide &lt;- tcheek_z %&gt;%
   pivot_wider(names_from = bin, 
               values_from = Zcheek) %&gt;%
   rename(BL = bin_0)</code></pre>
@@ -833,7 +789,7 @@ Your Name
 <li>Use wide columns to calcuate the difference between each bin column and BL, creating a new set of columns starting with “diff”, drop BL column and all columns starting with bin (i.e. raw z scores).</li>
 </ul>
 <p>note - This df contains for each bin the difference between stimulus and basline, so POSITIVE difference scores = greater activity during STIM than BL and NEGATIVE difference scores = greater activity during BL than STIM</p>
-<pre class="r"><code>cheek_z_diff &lt;- cheek_z_wide %&gt;% 
+<pre class="r"><code>tcheek_z_diff &lt;- tcheek_z_wide %&gt;% 
   mutate(diff_bin1 = bin_1 - BL, 
          diff_bin2 = bin_2 - BL,
          diff_bin3 = bin_3- BL, 
@@ -844,22 +800,355 @@ Your Name
 </div>
 <div id="make-data-long-again-1" class="section level4">
 <h4>make data long again</h4>
-<pre class="r"><code>cheek_z_diff_long &lt;- cheek_z_diff %&gt;%
+<pre class="r"><code>tcheek_z_diff_long &lt;- tcheek_z_diff %&gt;%
   pivot_longer(names_to = &quot;bin&quot;, 
                values_to = &quot;Zdiff&quot;, 
                diff_bin1:diff_bin6)</code></pre>
 </div>
 </div>
 </div>
+</div>
 <div id="bind-cheek-and-brow-together" class="section level1">
 <h1>BIND CHEEK AND BROW TOGETHER</h1>
-<pre class="r"><code>zdiff_cheek_brow &lt;- bind_rows(cheek_z_diff_long, brow_z_diff_long) %&gt;%
+<pre class="r"><code>tzdiff_cheek_brow &lt;- bind_rows(tcheek_z_diff_long, tbrow_z_diff_long) %&gt;%
   arrange(pp_no, emotion, trial, muscle, bin)</code></pre>
+</div>
+<div id="plot-distribution-of-zdiff" class="section level1">
+<h1>PLOT distribution of zdiff</h1>
+<pre class="r"><code>tzdiff_cheek_brow %&gt;%
+  group_by(muscle, emotion) %&gt;%
+  summarise(meanZdiff = mean(Zdiff, na.rm= TRUE), 
+            sdZdiff = sd(Zdiff, na.rm=TRUE))</code></pre>
+<pre><code>`summarise()` regrouping output by &#39;muscle&#39; (override with `.groups` argument)</code></pre>
+<pre><code># A tibble: 8 x 4
+# Groups:   muscle [2]
+  muscle emotion meanZdiff sdZdiff
+  &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 brow       626  -0.00705   0.877
+2 brow       727   0.326     1.16 
+3 brow       828   0.224     1.01 
+4 brow       929   0.296     1.02 
+5 cheek      626   0.451     1.17 
+6 cheek      727   0.209     0.970
+7 cheek      828   0.269     1.07 
+8 cheek      929   0.195     0.915</code></pre>
+<pre class="r"><code>tog_plot &lt;- tzdiff_cheek_brow %&gt;%
+  ggplot(aes(x = bin, y = Zdiff)) +
+  geom_jitter() +
+  facet_grid(vars(muscle), vars(emotion)) + 
+  labs(title = &quot;Zdiff bl and bin together&quot;)</code></pre>
 </div>
 <div id="write-to-csv" class="section level1">
 <h1>write to csv</h1>
-<pre class="r"><code>zdiff_cheek_brow %&gt;%
-  write_csv(here(&quot;data&quot;, &quot;combined&quot;, &quot;4_zdiff_clean.csv&quot;))</code></pre>
+<pre class="r"><code>tzdiff_cheek_brow %&gt;%
+  write_csv(here(&quot;data&quot;, &quot;combined&quot;, &quot;t4_zdiff_clean.csv&quot;))
+
+beepr::beep(1)</code></pre>
+</div>
+<div id="separate" class="section level1">
+<h1><strong>SEPARATE</strong></h1>
+<div id="read-in-data-1" class="section level2">
+<h2>read in data</h2>
+<pre class="r"><code>data &lt;- read_csv(here(&quot;data&quot;, &quot;combined&quot;, &quot;2_clean_no_bl_outliers.csv&quot;))</code></pre>
+<div id="pp-first-1" class="section level3">
+<h3>1 pp first</h3>
+<pre class="r"><code>spp403 &lt;- data %&gt;%
+  filter(pp_no == &quot;pp403&quot;)
+
+# make it wide 
+swidepp403 &lt;- spp403 %&gt;%
+  pivot_wider(names_from = muscle, values_from = rms)
+
+# filter for bl and bin 
+
+swidepp403_bl &lt;- swidepp403 %&gt;%
+  filter(bin == &quot;bin_0&quot;)
+
+swidepp403_bin &lt;- swidepp403 %&gt;%
+  filter(bin != &quot;bin_0&quot;)
+
+
+# for bl and bins separately, create new variables called zbrow and zcheek using the scale function and specifying center = TRUE and scale = TRUE
+
+# bl first
+swidepp403_bl$zbrow = scale(swidepp403_bl$brow, center = TRUE, scale = TRUE)
+swidepp403_bl$zcheek = scale(swidepp403_bl$cheek, center = TRUE, scale = TRUE)
+
+# bin next
+swidepp403_bin$zbrow = scale(swidepp403_bin$brow, center = TRUE, scale = TRUE)
+swidepp403_bin$zcheek = scale(swidepp403_bin$cheek, center = TRUE, scale = TRUE)
+
+# Check that the mean of the new zbrow and zcheek columns is 0 - this is what we want... 
+summary(swidepp403_bl)</code></pre>
+<pre><code>    pp_no            condition            emotion          bin           
+ Length:30          Length:30          Min.   :626.0   Length:30         
+ Class :character   Class :character   1st Qu.:651.2   Class :character  
+ Mode  :character   Mode  :character   Median :727.0   Mode  :character  
+                                       Mean   :770.8                     
+                                       3rd Qu.:828.0                     
+                                       Max.   :929.0                     
+                                                                         
+     bin_no     trial                brow            cheek       
+ Min.   :0   Length:30          Min.   : 3.382   Min.   : 3.138  
+ 1st Qu.:0   Class :character   1st Qu.: 5.165   1st Qu.: 3.625  
+ Median :0   Mode  :character   Median : 6.330   Median : 4.035  
+ Mean   :0                      Mean   : 7.047   Mean   : 4.991  
+ 3rd Qu.:0                      3rd Qu.: 8.070   3rd Qu.: 4.902  
+ Max.   :0                      Max.   :15.995   Max.   :15.754  
+                                NA&#39;s   :1        NA&#39;s   :1       
+      zbrow.V1            zcheek.V1     
+ Min.   :-1.309105   Min.   :-0.621908  
+ 1st Qu.:-0.672190   1st Qu.:-0.458622  
+ Median :-0.256225   Median :-0.321007  
+ Mean   : 0.000000   Mean   : 0.000000  
+ 3rd Qu.: 0.365507   3rd Qu.:-0.030174  
+ Max.   : 3.196562   Max.   : 3.611466  
+ NA&#39;s   :1           NA&#39;s   :1          </code></pre>
+<pre class="r"><code>summary(swidepp403_bin)</code></pre>
+<pre><code>    pp_no            condition            emotion          bin           
+ Length:180         Length:180         Min.   :626.0   Length:180        
+ Class :character   Class :character   1st Qu.:626.0   Class :character  
+ Mode  :character   Mode  :character   Median :727.0   Mode  :character  
+                                       Mean   :770.8                     
+                                       3rd Qu.:828.0                     
+                                       Max.   :929.0                     
+                                                                         
+     bin_no       trial                brow            cheek        
+ Min.   :1.0   Length:180         Min.   : 3.746   Min.   :  2.934  
+ 1st Qu.:2.0   Class :character   1st Qu.: 5.716   1st Qu.:  3.691  
+ Median :3.5   Mode  :character   Median : 7.482   Median :  4.298  
+ Mean   :3.5                      Mean   : 8.749   Mean   :  7.103  
+ 3rd Qu.:5.0                      3rd Qu.: 9.668   3rd Qu.:  6.143  
+ Max.   :6.0                      Max.   :66.192   Max.   :120.989  
+                                  NA&#39;s   :6        NA&#39;s   :6        
+      zbrow.V1            zcheek.V1     
+ Min.   :-0.753730   Min.   :-0.382672  
+ 1st Qu.:-0.456885   1st Qu.:-0.313166  
+ Median :-0.190912   Median :-0.257427  
+ Mean   : 0.000000   Mean   : 0.000000  
+ 3rd Qu.: 0.138338   3rd Qu.:-0.088060  
+ Max.   : 8.652817   Max.   :10.453386  
+ NA&#39;s   :6           NA&#39;s   :6          </code></pre>
+</div>
+</div>
+<div id="all-the-data-1" class="section level2">
+<h2>all the data</h2>
+<p>make data wide, separate bl and bins into different df</p>
+<pre class="r"><code>sdata_score &lt;- data %&gt;%
+  pivot_wider(names_from = muscle, 
+              values_from = rms) 
+
+# separate bl and bins
+
+sbl_data_score &lt;- sdata_score %&gt;%
+  filter(bin == &quot;bin_0&quot;)
+
+sbin_data_score &lt;- sdata_score %&gt;%
+  filter(bin != &quot;bin_0&quot;)</code></pre>
+<p>Make new col with z score for bl and bin separately</p>
+<pre class="r"><code># bl first 
+sbl_data_zscore &lt;- sbl_data_score %&gt;%
+  group_by(pp_no) %&gt;%
+  mutate(Zbrow = scale(brow, center = TRUE, scale = TRUE)) %&gt;%
+  mutate(Zcheek = scale(cheek, center = TRUE, scale = TRUE))
+  
+summary(sbl_data_zscore)</code></pre>
+<pre><code>    pp_no            condition            emotion          bin           
+ Length:1548        Length:1548        Min.   :626.0   Length:1548       
+ Class :character   Class :character   1st Qu.:701.8   Class :character  
+ Mode  :character   Mode  :character   Median :727.0   Mode  :character  
+                                       Mean   :776.7                     
+                                       3rd Qu.:828.0                     
+                                       Max.   :929.0                     
+                                                                         
+     bin_no     trial                brow            cheek       
+ Min.   :0   Length:1548        Min.   : 0.791   Min.   : 1.552  
+ 1st Qu.:0   Class :character   1st Qu.: 4.314   1st Qu.: 3.527  
+ Median :0   Mode  :character   Median : 7.040   Median : 4.900  
+ Mean   :0                      Mean   : 7.805   Mean   : 7.205  
+ 3rd Qu.:0                      3rd Qu.: 9.938   3rd Qu.: 7.799  
+ Max.   :0                      Max.   :66.459   Max.   :76.243  
+                                NA&#39;s   :100      NA&#39;s   :132     
+      Zbrow.V1          Zcheek.V1     
+ Min.   :-2.24369   Min.   :-2.81022  
+ 1st Qu.:-0.66806   1st Qu.:-0.65255  
+ Median :-0.23698   Median :-0.32019  
+ Mean   : 0.00000   Mean   : 0.00000  
+ 3rd Qu.: 0.55237   3rd Qu.: 0.34098  
+ Max.   : 4.17000   Max.   : 4.23265  
+ NA&#39;s   :100        NA&#39;s   :132       </code></pre>
+<pre class="r"><code># bin next 
+sbin_data_zscore &lt;- sbin_data_score %&gt;%
+  group_by(pp_no) %&gt;%
+  mutate(Zbrow = scale(brow, center = TRUE, scale = TRUE)) %&gt;%
+  mutate(Zcheek = scale(cheek, center = TRUE, scale = TRUE))
+  
+summary(sbin_data_zscore)</code></pre>
+<pre><code>    pp_no            condition            emotion          bin           
+ Length:9288        Length:9288        Min.   :626.0   Length:9288       
+ Class :character   Class :character   1st Qu.:701.8   Class :character  
+ Mode  :character   Mode  :character   Median :727.0   Mode  :character  
+                                       Mean   :776.7                     
+                                       3rd Qu.:828.0                     
+                                       Max.   :929.0                     
+                                                                         
+     bin_no       trial                brow              cheek        
+ Min.   :1.0   Length:9288        Min.   :  0.7779   Min.   :  1.504  
+ 1st Qu.:2.0   Class :character   1st Qu.:  4.5218   1st Qu.:  3.645  
+ Median :3.5   Mode  :character   Median :  7.2871   Median :  5.184  
+ Mean   :3.5                      Mean   :  9.9303   Mean   : 10.662  
+ 3rd Qu.:5.0                      3rd Qu.: 11.1723   3rd Qu.: 10.207  
+ Max.   :6.0                      Max.   :220.8444   Max.   :176.645  
+                                  NA&#39;s   :600        NA&#39;s   :792      
+     Zbrow.V1          Zcheek.V1    
+ Min.   :-2.9953   Min.   :-1.2278  
+ 1st Qu.:-0.5148   1st Qu.:-0.5179  
+ Median :-0.2488   Median :-0.2949  
+ Mean   : 0.0000   Mean   : 0.0000  
+ 3rd Qu.: 0.2053   3rd Qu.: 0.1045  
+ Max.   :12.6086   Max.   :10.4534  
+ NA&#39;s   :600       NA&#39;s   :792      </code></pre>
+<p>Join bl and bin back together, arrange by trial and bin and drop old brow and cheek</p>
+<pre class="r"><code>sdata_zscore &lt;- bind_rows(sbl_data_zscore, sbin_data_zscore) %&gt;%
+  arrange(pp_no, emotion, trial, bin) %&gt;%
+  select(-brow, -cheek)</code></pre>
+</div>
+<div id="difference-scores-1" class="section level2">
+<h2>Difference Scores</h2>
+<p>Need to calculate difference scores from baseline. Need to make BIN wide to allow for calculations across columns. Its a bit difficult to do that for both muscles at the same time, so lets separate and work out the difference scores for brow and cheek separately.</p>
+<div id="brow-first-1" class="section level3">
+<h3>BROW FIRST</h3>
+<div id="add-a-muscle-column-2" class="section level4">
+<h4>Add a muscle column</h4>
+<p>Just to make things easier to join back together later</p>
+<pre class="r"><code>sbrow_z &lt;- sdata_zscore %&gt;%
+  mutate(muscle = &quot;brow&quot;) %&gt;%
+  select(pp_no, condition, emotion, bin, trial, muscle, Zbrow) </code></pre>
+</div>
+<div id="make-the-bin-column-wide-2" class="section level4">
+<h4>Make the bin column wide</h4>
+<p>… and rename bin_0 as BL (i.e. baseline)</p>
+<pre class="r"><code>sbrow_z_wide &lt;- sbrow_z %&gt;%
+  pivot_wider(names_from = bin, 
+              values_from = Zbrow) %&gt;%
+  rename(BL = bin_0)</code></pre>
+</div>
+<div id="mutate-diff-scores-2" class="section level4">
+<h4>mutate() diff scores</h4>
+<p>Use wide columns to calcuate the difference between each bin column and BL, creating a new set of columns starting with “diff”, drop BL column and all columns starting with bin (i.e. raw z scores).</p>
+<p>note - This df contains for each bin the difference between stimulus and basline, so POSITIVE difference scores = greater activity during STIM than BL and NEGATIVE difference scores = greater activity during BL than STIM</p>
+<pre class="r"><code>sbrow_z_diff &lt;- sbrow_z_wide %&gt;% 
+  mutate(diff_bin1 = bin_1 - BL, 
+         diff_bin2 = bin_2 - BL,
+         diff_bin3 = bin_3- BL, 
+         diff_bin4 = bin_4 - BL,
+         diff_bin5 = bin_5 - BL, 
+         diff_bin6 = bin_6 - BL) %&gt;%
+  select(-BL, - starts_with(&quot;bin&quot;))</code></pre>
+</div>
+<div id="make-data-long-again-2" class="section level4">
+<h4>Make data long again</h4>
+<pre class="r"><code>sbrow_z_diff_long &lt;- sbrow_z_diff %&gt;%
+  pivot_longer(names_to = &quot;bin&quot;, 
+               values_to = &quot;Zdiff&quot;, 
+               diff_bin1:diff_bin6)</code></pre>
+</div>
+<div id="checking-on-missingness-1" class="section level4">
+<h4>checking on missingness</h4>
+<pre class="r"><code>library(naniar)
+
+vis_miss(sbrow_z_diff_long)</code></pre>
+<pre><code>Warning: Removed 9288 rows containing missing values (geom_raster).</code></pre>
+<p><img src="figure/4.5_calculating_zscores_test.Rmd/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="now-cheek-1" class="section level3">
+<h3>NOW CHEEK</h3>
+<div id="add-a-muscle-column-3" class="section level4">
+<h4>add a muscle column</h4>
+<p>…to make things easier to join back together later</p>
+<pre class="r"><code>scheek_z &lt;- sdata_zscore %&gt;%
+  mutate(muscle = &quot;cheek&quot;) %&gt;%
+  select(pp_no, condition, emotion, bin, trial, muscle, Zcheek) </code></pre>
+</div>
+<div id="make-the-bin-column-wide-3" class="section level4">
+<h4>Make the bin column wide</h4>
+<p>…and rename bin_0 as BL (i.e. baseline)</p>
+<pre class="r"><code>scheek_z_wide &lt;- scheek_z %&gt;%
+  pivot_wider(names_from = bin, 
+              values_from = Zcheek) %&gt;%
+  rename(BL = bin_0)</code></pre>
+</div>
+<div id="mutate-diff-scores-3" class="section level4">
+<h4>mutate() diff scores</h4>
+<ul>
+<li>Use wide columns to calcuate the difference between each bin column and BL, creating a new set of columns starting with “diff”, drop BL column and all columns starting with bin (i.e. raw z scores).</li>
+</ul>
+<p>note - This df contains for each bin the difference between stimulus and basline, so POSITIVE difference scores = greater activity during STIM than BL and NEGATIVE difference scores = greater activity during BL than STIM</p>
+<pre class="r"><code>scheek_z_diff &lt;- scheek_z_wide %&gt;% 
+  mutate(diff_bin1 = bin_1 - BL, 
+         diff_bin2 = bin_2 - BL,
+         diff_bin3 = bin_3- BL, 
+         diff_bin4 = bin_4 - BL,
+         diff_bin5 = bin_5 - BL, 
+         diff_bin6 = bin_6 - BL) %&gt;%
+  select(-BL, - starts_with(&quot;bin&quot;))</code></pre>
+</div>
+<div id="make-data-long-again-3" class="section level4">
+<h4>make data long again</h4>
+<pre class="r"><code>scheek_z_diff_long &lt;- scheek_z_diff %&gt;%
+  pivot_longer(names_to = &quot;bin&quot;, 
+               values_to = &quot;Zdiff&quot;, 
+               diff_bin1:diff_bin6)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="bind-cheek-and-brow-together-1" class="section level1">
+<h1>BIND CHEEK AND BROW TOGETHER</h1>
+<pre class="r"><code>szdiff_cheek_brow &lt;- bind_rows(scheek_z_diff_long, sbrow_z_diff_long) %&gt;%
+  arrange(pp_no, emotion, trial, muscle, bin)
+
+# write to csv 
+
+szdiff_cheek_brow %&gt;%
+  write_csv(here(&quot;data&quot;, &quot;combined&quot;, &quot;s4_zdiff_clean.csv&quot;))
+
+beepr::beep(2)</code></pre>
+</div>
+<div id="plot-distribution-of-zdiff-1" class="section level1">
+<h1>PLOT distribution of zdiff</h1>
+<pre class="r"><code>szdiff_cheek_brow %&gt;%
+  group_by(muscle, emotion) %&gt;%
+  summarise(meanZdiff = mean(Zdiff, na.rm= TRUE), 
+            sdZdiff = sd(Zdiff, na.rm=TRUE))</code></pre>
+<pre><code>`summarise()` regrouping output by &#39;muscle&#39; (override with `.groups` argument)</code></pre>
+<pre><code># A tibble: 8 x 4
+# Groups:   muscle [2]
+  muscle emotion meanZdiff sdZdiff
+  &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 brow       626  -0.0406    0.993
+2 brow       727   0.0658    1.27 
+3 brow       828  -0.0329    1.15 
+4 brow       929   0.00876   1.19 
+5 cheek      626   0.123     1.31 
+6 cheek      727  -0.0758    1.12 
+7 cheek      828  -0.00947   1.26 
+8 cheek      929  -0.0393    1.08 </code></pre>
+<pre class="r"><code>sep_plot &lt;- szdiff_cheek_brow %&gt;%
+  ggplot(aes(x = bin, y = Zdiff)) +
+  geom_jitter() +
+  facet_grid(vars(muscle), vars(emotion)) +
+  labs(title = &quot;Zdiff bl and bin separately&quot;)</code></pre>
+<pre class="r"><code>library(patchwork)</code></pre>
+<pre><code>Warning: package &#39;patchwork&#39; was built under R version 3.5.2</code></pre>
+<pre class="r"><code>tog_sep &lt;- tog_plot + sep_plot
+
+ggsave(here(&quot;output&quot;, &quot;tog_sep.png&quot;))</code></pre>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre><code>Warning: Removed 1392 rows containing missing values (geom_point).</code></pre>
+<pre><code>Warning: Removed 1392 rows containing missing values (geom_point).</code></pre>
+<pre class="r"><code>beepr::beep(3)</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -883,32 +1172,33 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] naniar_0.4.1    skimr_1.0.7     here_0.1        forcats_0.5.0  
- [5] stringr_1.4.0   dplyr_1.0.1     purrr_0.3.3     readr_1.3.1    
- [9] tidyr_1.1.0     tibble_3.0.3    ggplot2_3.3.2   tidyverse_1.3.0
-[13] workflowr_1.6.2
+ [1] patchwork_1.0.0 naniar_0.4.1    skimr_1.0.7     here_0.1       
+ [5] forcats_0.5.0   stringr_1.4.0   dplyr_1.0.1     purrr_0.3.3    
+ [9] readr_1.3.1     tidyr_1.1.0     tibble_3.0.3    ggplot2_3.3.2  
+[13] tidyverse_1.3.0 workflowr_1.6.2
 
 loaded via a namespace (and not attached):
- [1] tidyselect_1.1.0       xfun_0.8               haven_2.3.1           
- [4] colorspace_1.4-1       vctrs_0.3.2            generics_0.0.2        
- [7] htmltools_0.5.0        yaml_2.2.1             blob_1.2.1            
-[10] rlang_0.4.7            later_1.1.0.1          pillar_1.4.6          
-[13] withr_2.2.0            glue_1.4.1             DBI_1.0.0             
-[16] dbplyr_1.4.4           modelr_0.1.8           readxl_1.3.1          
-[19] lifecycle_0.2.0        munsell_0.5.0          gtable_0.3.0          
-[22] cellranger_1.1.0       rvest_0.3.6            evaluate_0.14         
-[25] labeling_0.3           knitr_1.23             httpuv_1.5.2          
-[28] fansi_0.4.1            broom_0.7.0            Rcpp_1.0.5            
-[31] promises_1.1.1         backports_1.1.8        scales_1.1.1          
-[34] jsonlite_1.7.0         farver_2.0.3           fs_1.4.1              
-[37] hms_0.5.3              digest_0.6.25          stringi_1.4.6         
-[40] visdat_0.5.2           rprojroot_1.3-2        grid_3.5.1            
-[43] cli_2.0.2              tools_3.5.1            magrittr_1.5          
-[46] crayon_1.3.4           whisker_0.4            pkgconfig_2.0.3       
-[49] ellipsis_0.3.1         xml2_1.3.2             reprex_0.3.0          
-[52] lubridate_1.7.4        rstudioapi_0.11.0-9000 assertthat_0.2.1      
-[55] rmarkdown_1.15         httr_1.4.1             R6_2.4.1              
-[58] git2r_0.27.1           compiler_3.5.1        </code></pre>
+ [1] Rcpp_1.0.5             lubridate_1.7.4        assertthat_0.2.1      
+ [4] rprojroot_1.3-2        digest_0.6.25          utf8_1.1.4            
+ [7] R6_2.4.1               cellranger_1.1.0       backports_1.1.8       
+[10] reprex_0.3.0           visdat_0.5.2           evaluate_0.14         
+[13] httr_1.4.1             pillar_1.4.6           rlang_0.4.7           
+[16] readxl_1.3.1           rstudioapi_0.11.0-9000 whisker_0.4           
+[19] blob_1.2.1             rmarkdown_1.15         labeling_0.3          
+[22] munsell_0.5.0          broom_0.7.0            compiler_3.5.1        
+[25] httpuv_1.5.2           modelr_0.1.8           xfun_0.8              
+[28] pkgconfig_2.0.3        htmltools_0.5.0        tidyselect_1.1.0      
+[31] audio_0.1-5.1          fansi_0.4.1            crayon_1.3.4          
+[34] dbplyr_1.4.4           withr_2.2.0            later_1.1.0.1         
+[37] grid_3.5.1             jsonlite_1.7.0         gtable_0.3.0          
+[40] lifecycle_0.2.0        DBI_1.0.0              git2r_0.27.1          
+[43] magrittr_1.5           scales_1.1.1           cli_2.0.2             
+[46] stringi_1.4.6          farver_2.0.3           fs_1.4.1              
+[49] promises_1.1.1         xml2_1.3.2             ellipsis_0.3.1        
+[52] generics_0.0.2         vctrs_0.3.2            tools_3.5.1           
+[55] glue_1.4.1             hms_0.5.3              yaml_2.2.1            
+[58] colorspace_1.4-1       rvest_0.3.6            beepr_1.3             
+[61] knitr_1.23             haven_2.3.1           </code></pre>
 </div>
 </div>
 
