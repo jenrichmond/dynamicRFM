@@ -1,6 +1,7 @@
 ---
 title: "Home"
 site: workflowr::wflow_site
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   workflowr::wflow_html:
     toc: false
@@ -23,3 +24,7 @@ The steps are linked in individual .Rmd documents below.
 
 
 NOTE: these links can be edited in the index.Rmd file in the /analysis folder.
+
+
+
+[TESTing zscore calculations with bl and bins together vs. bl and bins separately, i.e. re-doing Step4 above](4.5_calculating_zscores_test.html)
