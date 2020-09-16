@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jen Richmond" />
+
+<meta name="date" content="2020-05-07" />
+
+<title>5_bin outliers</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">5_bin outliers</h1>
+<h4 class="author">Jen Richmond</h4>
+<h4 class="date">05/07/2020</h4>
+
+</div>
+
+
+<div id="load-packages" class="section level1">
+<h1>load packages</h1>
+<pre class="r"><code>library(tidyverse)
+library(here)
+library(janitor)</code></pre>
+</div>
+<div id="read-combined-clean-no-bl-outliers-data" class="section level1">
+<h1>read combined clean no BL outliers data</h1>
+<pre class="r"><code>bins &lt;- read_csv(here(&quot;data&quot;, &quot;combined&quot;, &quot;4_zdiff_clean.csv&quot;))</code></pre>
+<p>Make new screening column which is TRUE if the zdiff value for a particular bin is greater than 2SD the mean zdiff value for that trial for that participant/emotion/muscle.</p>
+<pre class="r"><code>bins_out &lt;- bins %&gt;%
+  group_by(pp_no, emotion, muscle, trial) %&gt;%
+  mutate(meanZdiff = mean(Zdiff), sdZdiff = sd(Zdiff)) %&gt;%
+  mutate(bin_outlier = if_else(Zdiff &gt; meanZdiff + 2*sdZdiff, &quot;TRUE&quot;, &quot;FALSE&quot;))</code></pre>
+<p>Make sure the new screen column is logical TRUE FALSE</p>
+<pre class="r"><code>bins_out$bin_outlier &lt;- as.logical(bins_out$bin_outlier)</code></pre>
+<p>How many bins are bad?</p>
+<pre class="r"><code>outlier_true &lt;- bins_out %&gt;%
+  filter(bin_outlier == TRUE)</code></pre>
+</div>
+<div id="test-on-1-participant-1-trial" class="section level1">
+<h1>test on 1 participant, 1 trial</h1>
+<p>Pick a pp that has an example of bad bins and work out how to make the bad bin value be NA</p>
+<pre class="r"><code>example &lt;- bins_out %&gt;%
+  filter(pp_no == &quot;pp401&quot;) %&gt;%
+  filter(emotion == &quot;626&quot;)  %&gt;%
+  filter(trial == &quot;trial4&quot;)
+
+glimpse(example)</code></pre>
+<pre><code>## Rows: 12
+## Columns: 10
+## Groups: pp_no, emotion, muscle, trial [2]
+## $ pp_no       &lt;chr&gt; &quot;pp401&quot;, &quot;pp401&quot;, &quot;pp401&quot;, &quot;pp401&quot;, &quot;pp401&quot;, &quot;pp401&quot;…
+## $ condition   &lt;chr&gt; &quot;dyn&quot;, &quot;dyn&quot;, &quot;dyn&quot;, &quot;dyn&quot;, &quot;dyn&quot;, &quot;dyn&quot;, &quot;dyn&quot;, &quot;dy…
+## $ emotion     &lt;dbl&gt; 626, 626, 626, 626, 626, 626, 626, 626, 626, 626, 62…
+## $ trial       &lt;chr&gt; &quot;trial4&quot;, &quot;trial4&quot;, &quot;trial4&quot;, &quot;trial4&quot;, &quot;trial4&quot;, &quot;t…
+## $ muscle      &lt;chr&gt; &quot;brow&quot;, &quot;brow&quot;, &quot;brow&quot;, &quot;brow&quot;, &quot;brow&quot;, &quot;brow&quot;, &quot;che…
+## $ bin         &lt;chr&gt; &quot;diff_bin1&quot;, &quot;diff_bin2&quot;, &quot;diff_bin3&quot;, &quot;diff_bin4&quot;, …
+## $ Zdiff       &lt;dbl&gt; -0.093680571, -0.350499307, -0.380517733, 2.67917902…
+## $ meanZdiff   &lt;dbl&gt; 0.3021934, 0.3021934, 0.3021934, 0.3021934, 0.302193…
+## $ sdZdiff     &lt;dbl&gt; 1.17541707, 1.17541707, 1.17541707, 1.17541707, 1.17…
+## $ bin_outlier &lt;lgl&gt; FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALS…</code></pre>
+<p>Use mutate and replace to replace the Zdiff value with NA, if bin_outlier == TRUE</p>
+<pre class="r"><code>test &lt;-  example %&gt;% mutate(Zdiff = replace(Zdiff, bin_outlier == &quot;TRUE&quot;, NA))</code></pre>
+</div>
+<div id="apply-bin-screen-to-to-whole-dataframe" class="section level1">
+<h1>apply bin screen to to whole dataframe</h1>
+<pre class="r"><code>bins_screen &lt;- bins_out %&gt;%
+  mutate(Zdiff = replace(Zdiff, bin_outlier == &quot;TRUE&quot;, NA))
+
+# fix values in bin column 
+bins_screen$bin &lt;- str_sub(bins_screen$bin, -4) </code></pre>
+</div>
+<div id="drop-extra-columns-write-csv" class="section level1">
+<h1>drop extra columns, write csv</h1>
+<pre class="r"><code>bins_screen &lt;- bins_screen %&gt;%
+  select(1:7) %&gt;%
+  write_csv(here(&quot;data&quot;, &quot;combined&quot;, &quot;5_zdiff_binscreened.csv&quot;))</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

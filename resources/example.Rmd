@@ -1,0 +1,172 @@
+---
+title: "SFLinR-LMM example"
+author: "Jen Richmond"
+date: "09/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(lme4)
+
+set.seed(666)
+```
+
+# generate participant and item identifiers
+
+gl is generate levels, generate 6 levels and repeat them 20 times
+```{r}
+ppt_ids <- gl(6,20)
+
+
+```
+
+# generate item identifers
+
+generate 20 levels and repeat them once
+```{r}
+it_ids <- gl(20,1)
+```
+
+All 6 participants responded to all items, so we need to repeat them 6 times. 
+
+```{r}
+it_ids <- rep(it_ids, 6)
+
+
+```
+
+Check both ppt and it ids are 120 obs long.
+
+```{r}
+length(ppt_ids) 
+length(it_ids) 
+```
+
+Make word freq predictpr. Each item needs own log freq value. Use rexp() to get random expotentially distributed numbers
+
+```{r}
+logfreqs <- round(rexp(20) * 5, 2)
+
+# repeat 6 times
+
+logfreqs <- rep(logfreqs, 6)
+
+length(logfreqs
+       )
+```
+
+# put into tibble
+
+```{r}
+xdata <- tibble(ppt = ppt_ids, item = it_ids, freq = logfreqs)
+```
+
+Add response
+
+```{r}
+xdata$int <- 300
+```
+
+Varying intercepts per participant?
+
+```{r}
+ppt_ints <- rnorm(6, sd = 40)
+
+ppt_ints
+
+```
+
+add varying intercepts to tibble, making sure the intercept is the same for all 20 trials per ppt. 
+
+```{r}
+xdata$ppt_ints <- rep(ppt_ints, each = 20)
+```
+
+Generate varying item intercepts, repeate 6 times for 6 ppts
+```{r}
+item_ints <- rnorm(20, sd = 20)
+
+
+item_ints <- rep(item_ints, times = 6)
+
+length(item_ints)
+```
+
+Add to tibble
+
+```{r}
+xdata$item_ints <- item_ints
+```
+
+Adds errors
+
+```{r}
+xdata$error <- rnorm(120, sd = 20)
+```
+
+add effect, imagining the slop is -5, each increase in freq of 1, durations decrease by 5ms
+```{r}
+xdata$effect <- (-5)  * xdata$freq
+```
+
+create response variable
+
+```{r}
+xdata <- xdata %>% 
+  mutate(dur = int + ppt_ints + item_ints + error + effect)
+```
+
+dur contains "random" bits ...
+- participant varying intercepts (pp_ints) 
+- item varying intercepts (int_ints) 
+- error
+
+... and systematic bits
+- overall intercept (int)
+- effect 
+
+The int and effect are fmailiar from linear regression, only difference is now we also allow participant and item spefici variations
+
+# make data look real
+drop columns that generated the data
+
+```{r}
+xreal <- xdata %>%
+  select(-(int:effect))
+```
+
+# load packages
+```{r}
+library(lme4)
+```
+
+
+# build model
+
+Predicting vowel duration from word frequency. Freq is a fixed effect because it is continuous (random can only be categorical) and we expect it to have a systematic effect on duration that would replicate in a different cample. ppt and item are random, because you dont know how they will behave in advance and they might behave in unpredictable (random ways)
+
+This model allows for varying intercepts for participants and items. 
+
+```{r}
+xmd1 <- lmer(dur ~ freq + (1|ppt) + (1|item), data = xreal, REML = FALSE)
+
+summary(xmd1)
+```
+
+# NOTES and LINKs
+
+https://stats.stackexchange.com/questions/26855/example-reports-for-mixed-model-analysis-using-lmer-in-biology-psychology-and-m
+
+
+https://www.theanalysisfactor.com/writing-results-mixed-models/
+
+Best practice guide
+https://www.sciencedirect.com/science/article/pii/S0749596X20300061
+
+Prose 
+https://verbingnouns.github.io/notebooks/prose_statistics.nb.html

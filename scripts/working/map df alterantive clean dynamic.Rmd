@@ -1,0 +1,51 @@
+---
+title: "map_df clean dynamic"
+author: "Jen Richmond"
+date: "01/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Option 2. map_df: read,  clean, bind to df
+
+map_df is like map except that rather than returning a list, it returns a dataframe. What if we use map_df to run clean_emg (not the write_csv version), would that bind everything into a df?? If its going to bind everything together, maybe we perhaps dont need to write individual clean files to csv, and them read them back in in order to do next step?
+
+
+#### A. map read_excel
+
+```{r message=FALSE, warning=FALSE}
+list_raw_emg <- file_list %>% 
+  map(~ read_excel(path = here("R_cleaning", "data", "raw_data", "faces", .x), range = "A2:AE13")  %>%
+        mutate("file_name" = .x))
+
+# get first item of list for testing
+emg1 <- list_raw_emg[[1]]
+
+```
+
+#### B. map_df clean_emg
+```{r}
+df_clean_emg <- list_raw_emg %>%
+  map_df(~ clean_emg(.x))
+
+```
+
+## bind pp604_429 with full faces clean data set
+NOTe: run cleanup RAW eg pp604_429 before this step!
+
+```{r}
+final_clean_faces <- bind_rows(df_clean_emg, test_long)
+
+final_clean_faces$rms <- as.numeric(final_clean_faces$rms)
+final_clean_faces$bin <- as.factor(final_clean_faces$bin)
+final_clean_faces$trial <- as.factor(final_clean_faces$trial)
+final_clean_faces$muscle <- as.factor(final_clean_faces$muscle)
+
+write_csv(final_clean_faces, here("R_cleaning", "data", "clean_data", "faces_clean.csv"))
+
+
+```
+

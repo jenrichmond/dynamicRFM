@@ -1,0 +1,38 @@
+---
+title: "psycho example"
+author: "Jen Richmond"
+date: "10/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+https://neuropsychology.github.io/psycho.R/2018/05/10/interpret_mixed_models.html
+
+```{r}
+library(psycho)
+library(tidyverse)
+
+```
+
+```{r}
+
+df <- psycho::emotion %>% 
+  select(Participant_ID, 
+         Emotion_Condition, 
+         Subjective_Valence,
+         Autobiographical_Link)
+
+summary(df)
+```
+
+```{r}
+library(lmerTest)
+
+fit <- lmer(Autobiographical_Link ~ Emotion_Condition * Subjective_Valence + (1|Participant_ID), data=df)
+
+summary(fit)
+```
+

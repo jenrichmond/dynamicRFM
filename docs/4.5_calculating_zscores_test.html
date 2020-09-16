@@ -388,7 +388,7 @@ div.tocify {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -397,7 +397,7 @@ div.tocify {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -409,7 +409,7 @@ div.tocify {
 <strong>Last updated:</strong> 2020-09-16
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>dynamicRFM/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -425,12 +425,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -497,16 +497,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjenrichmonddynamicRFMtree12b577b4fc6f02535cc866bc1dde5871360386fbtargetblank12b577ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jenrichmond/dynamicRFM/tree/12b577b4fc6f02535cc866bc1dde5871360386fb" target="_blank">12b577b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjenrichmonddynamicRFMtree66771705756061a7e9eaee0b384565ae78c72cfctargetblank6677170a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jenrichmond/dynamicRFM/tree/66771705756061a7e9eaee0b384565ae78c72cfc" target="_blank">6677170</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjenrichmonddynamicRFMtree12b577b4fc6f02535cc866bc1dde5871360386fbtargetblank12b577ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjenrichmonddynamicRFMtree66771705756061a7e9eaee0b384565ae78c72cfctargetblank6677170a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jenrichmond/dynamicRFM/tree/12b577b4fc6f02535cc866bc1dde5871360386fb" target="_blank">12b577b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jenrichmond/dynamicRFM/tree/66771705756061a7e9eaee0b384565ae78c72cfc" target="_blank">6677170</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -527,6 +527,9 @@ Untracked files:
     Untracked:  resources/
     Untracked:  scripts/
     Untracked:  site_libs/
+
+Unstaged changes:
+    Modified:   analysis/4.5_calculating_zscores_test.Rmd
 
 </code></pre>
 <p>
@@ -565,6 +568,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jenrichmond/dynamicRFM/66771705756061a7e9eaee0b384565ae78c72cfc/docs/4.5_calculating_zscores_test.html" target="_blank">6677170</a>
+</td>
+<td>
+Your Name
+</td>
+<td>
+2020-09-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -764,6 +784,43 @@ Attaching package: &#39;naniar&#39;</code></pre>
 <pre class="r"><code>vis_miss(tbrow_z_diff_long)</code></pre>
 <pre><code>Warning: Removed 9288 rows containing missing values (geom_raster).</code></pre>
 <p><img src="figure/4.5_calculating_zscores_test.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jenrichmond/dynamicRFM/blob/66771705756061a7e9eaee0b384565ae78c72cfc/docs/figure/4.5_calculating_zscores_test.Rmd/unnamed-chunk-9-1.png" target="_blank">6677170</a>
+</td>
+<td>
+Your Name
+</td>
+<td>
+2020-09-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="now-cheek" class="section level3">
@@ -1060,6 +1117,43 @@ summary(sbin_data_zscore)</code></pre>
 vis_miss(sbrow_z_diff_long)</code></pre>
 <pre><code>Warning: Removed 9288 rows containing missing values (geom_raster).</code></pre>
 <p><img src="figure/4.5_calculating_zscores_test.Rmd/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-27-1">
+Past versions of unnamed-chunk-27-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-27-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jenrichmond/dynamicRFM/blob/66771705756061a7e9eaee0b384565ae78c72cfc/docs/figure/4.5_calculating_zscores_test.Rmd/unnamed-chunk-27-1.png" target="_blank">6677170</a>
+</td>
+<td>
+Your Name
+</td>
+<td>
+2020-09-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="now-cheek-1" class="section level3">
@@ -1140,14 +1234,22 @@ beepr::beep(2)</code></pre>
   geom_jitter() +
   facet_grid(vars(muscle), vars(emotion)) +
   labs(title = &quot;Zdiff bl and bin separately&quot;)</code></pre>
+</div>
+<div id="compare" class="section level1">
+<h1><strong>COMPARE</strong></h1>
 <pre class="r"><code>library(patchwork)</code></pre>
 <pre><code>Warning: package &#39;patchwork&#39; was built under R version 3.5.2</code></pre>
 <pre class="r"><code>tog_sep &lt;- tog_plot + sep_plot
 
-ggsave(here(&quot;output&quot;, &quot;tog_sep.png&quot;))</code></pre>
+print(tog_sep)</code></pre>
+<pre><code>Warning: Removed 1392 rows containing missing values (geom_point).</code></pre>
+<pre><code>Warning: Removed 1392 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/4.5_calculating_zscores_test.Rmd/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(here(&quot;output&quot;, &quot;tog_sep.png&quot;))</code></pre>
 <pre><code>Saving 7 x 5 in image</code></pre>
-<pre><code>Warning: Removed 1392 rows containing missing values (geom_point).</code></pre>
-<pre><code>Warning: Removed 1392 rows containing missing values (geom_point).</code></pre>
+<pre><code>Warning: Removed 1392 rows containing missing values (geom_point).
+
+Warning: Removed 1392 rows containing missing values (geom_point).</code></pre>
 <pre class="r"><code>beepr::beep(3)</code></pre>
 <br>
 <p>
@@ -1175,7 +1277,7 @@ other attached packages:
  [1] patchwork_1.0.0 naniar_0.4.1    skimr_1.0.7     here_0.1       
  [5] forcats_0.5.0   stringr_1.4.0   dplyr_1.0.1     purrr_0.3.3    
  [9] readr_1.3.1     tidyr_1.1.0     tibble_3.0.3    ggplot2_3.3.2  
-[13] tidyverse_1.3.0 workflowr_1.6.2
+[13] tidyverse_1.3.0
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.5             lubridate_1.7.4        assertthat_0.2.1      
@@ -1188,17 +1290,17 @@ loaded via a namespace (and not attached):
 [22] munsell_0.5.0          broom_0.7.0            compiler_3.5.1        
 [25] httpuv_1.5.2           modelr_0.1.8           xfun_0.8              
 [28] pkgconfig_2.0.3        htmltools_0.5.0        tidyselect_1.1.0      
-[31] audio_0.1-5.1          fansi_0.4.1            crayon_1.3.4          
-[34] dbplyr_1.4.4           withr_2.2.0            later_1.1.0.1         
-[37] grid_3.5.1             jsonlite_1.7.0         gtable_0.3.0          
-[40] lifecycle_0.2.0        DBI_1.0.0              git2r_0.27.1          
-[43] magrittr_1.5           scales_1.1.1           cli_2.0.2             
-[46] stringi_1.4.6          farver_2.0.3           fs_1.4.1              
-[49] promises_1.1.1         xml2_1.3.2             ellipsis_0.3.1        
-[52] generics_0.0.2         vctrs_0.3.2            tools_3.5.1           
-[55] glue_1.4.1             hms_0.5.3              yaml_2.2.1            
-[58] colorspace_1.4-1       rvest_0.3.6            beepr_1.3             
-[61] knitr_1.23             haven_2.3.1           </code></pre>
+[31] workflowr_1.6.2        audio_0.1-5.1          fansi_0.4.1           
+[34] crayon_1.3.4           dbplyr_1.4.4           withr_2.2.0           
+[37] later_1.1.0.1          grid_3.5.1             jsonlite_1.7.0        
+[40] gtable_0.3.0           lifecycle_0.2.0        DBI_1.0.0             
+[43] git2r_0.27.1           magrittr_1.5           scales_1.1.1          
+[46] cli_2.0.2              stringi_1.4.6          farver_2.0.3          
+[49] fs_1.4.1               promises_1.1.1         xml2_1.3.2            
+[52] ellipsis_0.3.1         generics_0.0.2         vctrs_0.3.2           
+[55] tools_3.5.1            glue_1.4.1             hms_0.5.3             
+[58] yaml_2.2.1             colorspace_1.4-1       rvest_0.3.6           
+[61] beepr_1.3              knitr_1.23             haven_2.3.1           </code></pre>
 </div>
 </div>
 

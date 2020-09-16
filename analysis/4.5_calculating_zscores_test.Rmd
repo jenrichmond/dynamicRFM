@@ -492,11 +492,19 @@ sep_plot <- szdiff_cheek_brow %>%
   facet_grid(vars(muscle), vars(emotion)) +
   labs(title = "Zdiff bl and bin separately")
 ```
+# **COMPARE**
 
 ```{r}
 library(patchwork)
 
 tog_sep <- tog_plot + sep_plot
+
+print(tog_sep)
+
+```
+
+
+```{r}
 
 ggsave(here("output", "tog_sep.png"))
 ```
